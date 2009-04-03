@@ -89,7 +89,7 @@ You can identify them in search results because they are yellow colored.
 As well as you can download the catalog you are editing, you can also upload a catalog. 
 The "Priority" option defines if the catalog that is going to be uploaded has priority
 over the stored one. This means that *without* priority if transhette finds in the new catalog
-an already translated string, it will respect the old translation. If you *enable translation*
+an already translated string, it will respect the old translation. If you *enable priority*
 the old value will be always overriden. Transhette manages empty translations as they don't 
 exist.
 
