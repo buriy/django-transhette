@@ -30,12 +30,68 @@ Documentation
 Installation
 ------------
 
-TODO
+To install transhette:
+
+    1. Download the application and place the transhette folder anywhere in your Python path (your project directory is fine, 
+    but anywhere else in your python path will do)
+    2. Add a 'transhette' line to the INSTALLED_APPS in your project's settings.py
+    3. Add an URL entry to your project's urls.py, for example:
+
+    from django.conf import settings
+    if 'transhette' in settings.INSTALLED_APPS:
+    urlpatterns += patterns('',
+            url(r'^transhette/', include('transhette.urls')),
+            )
+
+    Note: you can use whatever you wish as the URL prefix.
+
+    To uninstall transhette:
+
+    1. Comment out or remove the 'transhette' line in your INSTALLED_APPS
+    2. Comment out or remove the url inclusion 
+
+Security
+--------
+
+Because transhette requires write access to some of the files in your Django project, access to the application is restricted to 
+the administrator user only (as defined in your project's Admin interface)
+
+If you wish to grant editing access to other users:
+
+   1. create a 'translators' group in your admin interface
+   2. add the user you wish to grant translating rights to this group 
+
 
 Tutorial
 --------
 
-TODO
+Start your Django development server and point your browser to the URL prefix you 
+have chosen during the installation process. You will get to the file selection window. 
+
+Select a file and translate each untranslated message. Whenever a new batch of messages 
+is processed, transhette updates the corresponding django.po file and regenerates the 
+corresponding mo file.
+
+This means your project's labels will be translated right away, unfortunately you'll still 
+have to restart the webserver for the changes to take effect.
+
+If the webserver doesn't have write access on the catalog files an archive of the catalog 
+files can be downloaded. 
+
+There is a useful search box where you can enter keywords to find the desired string.
+
+It is possible to filter the strings by their state "Only translated", "Only non-translated" 
+and "Fuzzy". Fuzzy strings are the ones that have been automatically translated by ugettext, 
+so be careful about them. You *should* check all Fuzzy Strings before saving your catalog. 
+You can identify them in search results because they are yellow colored.
+
+
+As well as you can download the catalog you are editing, you can also upload a catalog. 
+The "Priority" option defines if the catalog that is going to be uploaded has priority
+over the stored one. This means that *without* priority if transhette finds in the new catalog
+an already translated string, it will respect the old translation. If you *enable translation*
+the old value will be always overriden. Transhette manages empty translations as they don't 
+exist.
 
 Customization
 -------------
