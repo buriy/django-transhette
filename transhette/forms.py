@@ -6,7 +6,7 @@ from django.forms.util import ErrorList
 from django.conf import settings
 from django.template.loader import render_to_string
 
-from rosetta import polib, poutil
+from transhette import polib, poutil
 
 
 PO_PROJECT_BASE = 'po_project_base'

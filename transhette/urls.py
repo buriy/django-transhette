@@ -1,6 +1,6 @@
 from django.conf.urls.defaults import patterns, url
 
-urlpatterns = patterns('rosetta.views',
+urlpatterns = patterns('transhette.views',
     url(r'^$', 'home', name='rosetta-home'),
     url(r'^restart/$', 'restart_server', name='rosetta-restart-server'),
     url(r'^apply_changes/$', 'do_restart', name='apply_changes'),

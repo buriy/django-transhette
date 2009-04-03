@@ -1,6 +1,6 @@
 import re, string, sys, os
 from django.conf import settings
-from rosetta import polib
+from transhette import polib
 try:
     set
 except NameError:

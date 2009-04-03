@@ -15,14 +15,13 @@ from django.shortcuts import render_to_response
 from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext, get_language
-
 from django.views.decorators.cache import never_cache
-from rosetta.polib import pofile
-from rosetta.forms import (UpdatePoForm, UpdateConfirmationPoForm,
+from transhette.polib import pofile
+from transhette.forms import (UpdatePoForm, UpdateConfirmationPoForm,
                            _get_path_file, _get_lang_by_file)
-from rosetta.poutil import find_pos, pagination_range, priority_merge, get_changes
-from rosetta import settings as rosetta_settings
-import rosetta
+from transhette.poutil import find_pos, pagination_range, priority_merge, get_changes
+from transhette import settings as rosetta_settings
+import transhette
 
 
 def validate_format(pofile):
@@ -107,12 +106,12 @@ def set_new_translation(request):
                 poentry.msgstr = msgstr
                 po_filename = file_po
                 break
-        version = rosetta.get_version(True)
+        version = transhette.get_version(True)
         format_errors = validate_format(selected_pofile)
         if not format_errors:
             try:
                 selected_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
-                selected_pofile.metadata['X-Translated-Using'] = str("django-rosetta %s" % rosetta.get_version(False))
+                selected_pofile.metadata['X-Translated-Using'] = str("django-rosetta %s" % transhette.get_version(False))
                 selected_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
             except UnicodeDecodeError:
                 pass
@@ -186,7 +185,7 @@ def home(request):
             out_ = out_.rstrip()
         return out_
 
-    version = rosetta.get_version(True)
+    version = transhette.get_version(True)
     if 'rosetta_i18n_fn' in request.session:
         # if another translator has updated catalog... we will reload this
         reload_if_catalog_updated(request)
@@ -256,7 +255,7 @@ def home(request):
 
                 try:
                     rosetta_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
-                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = str("django-rosetta %s" % rosetta.get_version(False))
+                    rosetta_i18n_pofile.metadata['X-Translated-Using'] = str("django-rosetta %s" % transhette.get_version(False))
                     rosetta_i18n_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
                 except UnicodeDecodeError:
                     pass
@@ -441,7 +440,7 @@ def list_languages(request):
             )
         )
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
-    version = rosetta.get_version(True)
+    version = transhette.get_version(True)
     return render_to_response('rosetta/languages.html', locals(), context_instance=RequestContext(request))
 list_languages=user_passes_test(lambda user: can_translate(user), '/admin/')(list_languages)
 list_languages=never_cache(list_languages)
@@ -535,7 +534,7 @@ def update(request, catalogue=False, no_confirmation=False):
         po_tmp, po_dest_file, priority = form.save_temporal_file()
         if no_confirmation:
             merge(po_tmp, po_dest_file, priority)
-            redirect_to = reverse('rosetta.views.home')
+            redirect_to = reverse('transhette.views.home')
         else:
             request.session['rosetta_update_confirmation'] = {
                 'po_tmp': po_tmp.fpath,
@@ -545,7 +544,7 @@ def update(request, catalogue=False, no_confirmation=False):
                 'lang': _get_lang_by_file(po_dest_file.fpath),
             }
 
-            redirect_to = reverse('rosetta.views.update_confirmation')
+            redirect_to = reverse('transhette.views.update_confirmation')
         return HttpResponseRedirect(redirect_to)
     return render_to_response('rosetta/update_file.html',
                               {'form': form,
@@ -568,7 +567,7 @@ def update_confirmation(request):
     if form.is_valid():
         priority = up_conf['priority']
         merge(pofile_tmp, pofile_dest_file, priority)
-        redirect_to = reverse('rosetta.views.home')
+        redirect_to = reverse('transhette.views.home')
         return HttpResponseRedirect(redirect_to)
     else:
         lang = up_conf['lang']
