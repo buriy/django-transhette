@@ -19,7 +19,7 @@ Notes:
    (as defined by the WSGIScriptAlias directive.)
  * WSGIScriptReloading must be set to On (it is by default)
  * For performance reasons, this setting should be disabled in production environments
- * When a common rosetta installation is shared among different Django projects, 
+ * When a common transhette installation is shared among different Django projects, 
    each one running in its own distinct WSGI virtual host, you can activate
    auto-reloading in individual projects by enabling this setting in the project's 
    own configuration file, i.e. in the project's settings.py

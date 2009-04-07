@@ -6,7 +6,7 @@ try:
 except NameError:
     from sets import Set as set   # Python 2.3 fallback
     
-def find_pos(lang, include_djangos = False, include_rosetta = False):
+def find_pos(lang, include_djangos = False, include_transhette = False):
     """
     scans a couple possible repositories of gettext catalogs for the given 
     language code
@@ -31,7 +31,7 @@ def find_pos(lang, include_djangos = False, include_rosetta = False):
     
     # project/app/locale
     for appname in settings.INSTALLED_APPS:
-        if 'rosetta' == appname and include_rosetta == False:
+        if 'transhette' == appname and include_transhette == False:
             continue
             
         p = appname.rfind('.')

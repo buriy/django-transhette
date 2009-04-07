@@ -15,7 +15,7 @@ PO_PROJECT_BASE = 'po_project_base'
 class FormAdminDjango(forms.Form):
 
     def as_django_admin(self):
-        return render_to_string('rosetta/form_admin_django.html', {'form': self, })
+        return render_to_string('transhette/form_admin_django.html', {'form': self, })
 
 
 class UpdateConfirmationPoForm(FormAdminDjango):
@@ -85,7 +85,7 @@ class UpdatePoForm(FormAdminDjango):
         l = []
         choices = [('', '-----')]
         for language in settings.LANGUAGES:
-            l_extend = poutil.find_pos(language[0], include_djangos=False, include_rosetta=False)
+            l_extend = poutil.find_pos(language[0], include_djangos=False, include_transhette=False)
             l_extend = [item.split(settings.BASEDIR)[1] for item in l_extend]
             l.extend(l_extend)
         for item in l:
