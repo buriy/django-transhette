@@ -29,11 +29,11 @@ class NotTranslated(object):
         return
 
 
-class RosettaTranslateNode(TranslateNode):
+class TranshetteTranslateNode(TranslateNode):
 
     def render(self, context):
         if not ('user' in context and context['user'].is_staff):
-            return super(RosettaTranslateNode, self).render(context)
+            return super(TranshetteTranslateNode, self).render(context)
 
         msgid = self.value.resolve(context)
         cat = copy.copy(catalog())
@@ -44,13 +44,13 @@ class RosettaTranslateNode(TranslateNode):
         except ValueError:
             styles.append("untranslated")
             msgstr = msgid
-        return render_to_string('rosetta/rosetta_trans.html',
+        return render_to_string('transhette/transhette_trans.html',
                                 {'msgid': msgid,
                                  'styles': ' '.join(styles),
                                  'value': msgstr})
 
 
-def rosetta_trans(parser, token):
+def transhette_trans(parser, token):
 
     class TranslateParser(TokenParser):
 
@@ -66,13 +66,13 @@ def rosetta_trans(parser, token):
             return (value, noop)
     value, noop = TranslateParser(token.contents).top()
 
-    return RosettaTranslateNode(value, noop)
+    return TranshetteTranslateNode(value, noop)
 
-register.tag('rosetta_trans', rosetta_trans)
+register.tag('transhette_trans', transhette_trans)
 
 
-@register.inclusion_tag('rosetta/rosetta_header.html', takes_context=True)
-def rosetta_media_inline(context):
+@register.inclusion_tag('transhette/transhette_header.html', takes_context=True)
+def transhette_media_inline(context):
     if 'user' in context and context['user'].is_staff:
         return {'is_staff': True,
                 'language': get_language_name(get_language())}
