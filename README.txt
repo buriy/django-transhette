@@ -105,11 +105,11 @@ You can get the last bleeding edge version of transhette by doing
 a checkout of its subversion repository. This way you can add it
 as an external into your main project directory::
 
-svn checkout https://svnpub.yaco.es/djangoapps/transhette/trunk transhette
+svn checkout http://svnpub.yaco.es/djangoapps/transhette/trunk transhette
 
 Bug reports, patches and suggestions are more than welcome. Just put
 them in our Trac system and use the 'transhette' component when you fill
 tickets::
 
-https://tracpub.yaco.es/djangoapps/
+http://tracpub.yaco.es/djangoapps/
 
