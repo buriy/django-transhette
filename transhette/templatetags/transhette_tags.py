@@ -8,6 +8,7 @@ from django.templatetags.i18n import TranslateNode
 from django.utils.translation import get_language
 from django.utils.translation.trans_real import catalog
 
+from transhette.views import can_translate
 
 register = template.Library()
 
@@ -78,3 +79,45 @@ def transhette_media_inline(context):
                 'language': get_language_name(get_language())}
     else:
         return {'is_staff': False}
+
+
+class IfNode(template.Node):
+
+    def __init__(self, if_node, else_node):
+        self.if_node = if_node
+        self.else_node = else_node
+
+    def __repr__(self):
+        return '<IfNode>'
+
+    def check(self, context):
+        raise NotImplementedError
+
+    def render(self, context):
+        if self.check(context):
+            return self.if_node.render(context)
+        else:
+            return self.else_node.render(context)
+
+
+class IfCanAccessTranshette(IfNode):
+
+    def check(self, context):
+        user = template.Variable('user').resolve(context)
+        return can_translate(user)
+
+
+def if_can_access_transhette(parser, token):
+    bits = list(token.split_contents())
+    if len(bits) != 1:
+        raise TemplateSyntaxError('%r takes no arguments' % bits[0])
+    end_tag = 'end' + bits[0]
+    node_if = parser.parse(('else', end_tag))
+    token = parser.next_token()
+    if token.contents == 'else':
+        node_else = parser.parse((end_tag, ))
+        parser.delete_first_token()
+    else:
+        node_else = template.NodeList()
+    return IfCanAccessTranshette(node_if, node_else)
+if_can_access_transhette = register.tag(if_can_access_transhette)
