@@ -9,24 +9,24 @@ ENABLE_TRANSLATION_SUGGESTIONS = True
 SEARCH_INTO_OCCURRENCES = False
 
 """
-When running WSGI daemon mode, using mod_wsgi 2.0c5 or later, this setting 
-controls whether the contents of the gettext catalog files should be 
+When running WSGI daemon mode, using mod_wsgi 2.0c5 or later, this setting
+controls whether the contents of the gettext catalog files should be
 automatically reloaded by the WSGI processes each time they are modified.
 
 Notes:
 
- * The WSGI daemon process must have write permissions on the WSGI script file 
+ * The WSGI daemon process must have write permissions on the WSGI script file
    (as defined by the WSGIScriptAlias directive.)
  * WSGIScriptReloading must be set to On (it is by default)
  * For performance reasons, this setting should be disabled in production environments
- * When a common transhette installation is shared among different Django projects, 
+ * When a common transhette installation is shared among different Django projects,
    each one running in its own distinct WSGI virtual host, you can activate
-   auto-reloading in individual projects by enabling this setting in the project's 
+   auto-reloading in individual projects by enabling this setting in the project's
    own configuration file, i.e. in the project's settings.py
 
 Refs:
 
- * http://code.google.com/p/modwsgi/wiki/ReloadingSourceCode 
+ * http://code.google.com/p/modwsgi/wiki/ReloadingSourceCode
  * http://code.google.com/p/modwsgi/wiki/ConfigurationDirectives#WSGIReloadMechanism
 
 """
@@ -47,3 +47,7 @@ AUTO_RELOAD_METHOD = 'test'
 SHOW_NATIVE_LANGUAGE = True
 
 FORCE_NATIVE_LANGUAGE_TO = 'es'
+
+# List django and rosetta catalogs
+INCLUDE_DJANGOS = False
+INCLUDE_TRANSHETTE = True

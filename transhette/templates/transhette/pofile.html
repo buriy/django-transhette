@@ -1,7 +1,82 @@
 {% extends "transhette/base.html" %}
 {% load transhette_filters i18n %}
+
+{% block extrahead %}
+  <script src="{{ MEDIA_URL }}js/jquery-1.2.6.min.js"></script>
+  <script type="text/javascript">
+  // <![CDATA[
+  (function($) {
+
+  $(document).ready( function() {
+      $("tr.fuzzy textarea").change(function () {
+          $(this).parent().parent().removeClass("fuzzy");
+      });
+
+      $("div.submit-row input").click(function () {
+          var not_empty_fuzzies = $("tr.fuzzy textarea").filter(function () {
+              return this.value != ""
+          });
+          if (not_empty_fuzzies.length > 0) {
+              confirmation = confirm("{% trans "Warning... There are fuzzy elements that will be translated as suggestion says. Do you want to continue?" %}");
+              if(!confirmation) {
+                  return false; // do not perform form submit
+              }
+          }
+      });
+  });
+
+  })(jQuery);
+
+  (function ($) {
+    $(document).ready(function () {
+        var ajax_url = $("input#transhette-ajax-url").val();
+    $("input.update-by-ajax").click(function() {
+            container = $(this).parents('td.translation');
+            catalog = container.find('input.valid-catalog').val();
+            textareas = container.find('textarea');
+            if (!textareas) return;
+            multiple=false;
+            if (textareas.length > 1) {
+                translation="";
+                textareas.each(function() {
+                    key = $(this).attr('name').split('_')[2];
+                    translation += "&translation_" + key + "=" + $(this).val();
+                });
+                multiple=true;
+            } else {
+                translation = "&translation=" + textareas.val();
+            }
+            msgid = container.find('input.entry-id').val();
+
+            $.ajax({
+                data: "catalog=" + catalog + translation + '&msgid=' + msgid,
+                url: ajax_url,
+                type: "GET",
+                async: true,
+                dataType: "json",
+                success: function(json_data, textstatus) {
+                    if (json_data.saved) {
+                        if (multiple) {
+                            for (var item in json_data.translation) {
+                                container.find('span.prioritary-translation-'+item).text(json_data.translation[item]);
+                            }
+                        } else {
+                            container.find('span.prioritary-translation').text(json_data.translation);
+                        }
+                        container.find('.ajax-success').show();
+                    } else {
+                        container.find('.ajax-error').show();
+                    }
+                }});
+        });
+    });
+  })(jQuery);
+
+  // ]]>
+  </script>
+{% endblock %}
 {% block header %}
-    {{block.super}}
+    {{ block.super }}
     <div id="transhette-tools" style="float: right; font-size: 11px; padding-right: 10px;">
         <p>
             <span><a href="{% url transhette-restart-server %}">{% trans "Restart web server" %}</a> /
@@ -11,6 +86,7 @@
             </span>
         </p>
     </div>
+    <input type="hidden" id="transhette-ajax-url" name="transhette-ajax-url" value="{% url transhette-ajax %}" />
 {% endblock %}
 {% block breadcumbs %}
     <a href="{% url transhette-pick-file %}">{% trans "Home" %}</a> &rsaquo; 
@@ -64,7 +140,7 @@
                 <tbody>
                     {% for item_message in message_list %}
                     {% with item_message.message as message %}
-                    <tr class="{% cycle row1,row2 %} {% for flag in message.flags %}{{flag}} {% endfor %}">
+                    <tr class="{% cycle row1,row2 %} {% for flag in message.flags %}{{flag}} {% endfor %}{% if not item_message.is_valid %} novalid{% endif %}">
                         {% if message.msgid_plural %}
                             <td class="original plural">
                                 <span class="part">{{message.msgid|format_message|linebreaksbr}}</span>
@@ -82,6 +158,35 @@
                                     <label for="m_{{message.id}}_{{k}}">{{k}}:</label>
                                     <textarea rows="{{message.msgid|format_message|lines_count}}" cols="40" id="m_{{message.id}}_{{k}}" name="m_{{message.id}}_{{k}}">{{msgstr}}</textarea>
                                 {% endfor %}
+                                {% if not item_message.is_valid %}
+                                  <p>
+                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" />
+                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "There is a more prioritary catalog" %}</a>
+                                  </p>
+                                  <p>
+                                    <label>{% trans "Prioritary translation:" %}</label>
+                                    <ul>
+                                    {% for k, msgstr in item_message.valid_entry.msgstr_plural.items|dictsort:"0"  %}
+                                      <li>
+                                        <label>{{k}}:</label>
+                                        <span class="prioritary-translation-{{ k }}">{{ msgstr }}</span>
+                                      </li>
+                                    {% endfor %}
+                                    </ul>
+                                    <span class="hide ajax-notify ajax-success">
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
+                                    </span>
+                                    <span class="hide ajax-notify ajax-error">
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
+                                    </span>
+                                  </p>
+                                  <p>
+                                    {% trans "Update prioritary catalog with the text from the input boxes?" %}
+                                    <input type="hidden" class="valid-catalog" name="valid_catalog" value="{{ item_message.valid_catalog.fpath }}" />
+                                    <input type="hidden" class="entry-id" name="entry_id" value="{{ message.msgid }}" />
+                                    <input type="button" class="update-by-ajax" name="update_prioritary" value="{% trans "Yes, update" %}" />
+                                  </p>
+                                {% endif %}
                             </td>
                         {% else %}
                             <td class="original">{{ message.msgid|format_message|linebreaksbr }}</td>
@@ -91,6 +196,28 @@
                             <td class="translation">
                                 <textarea rows="{{message.msgid|format_message|lines_count}}" cols="40" name="m_{{message.id}}">{{message.msgstr}}</textarea>
                                 {% if ENABLE_TRANSLATION_SUGGESTIONS %}<a href="#" class="suggest">{% trans "suggest" %}</a>{% endif %}
+                                {% if not item_message.is_valid %}
+                                  <p>
+                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" />
+                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "There is a more prioritary catalog" %}</a>
+                                  </p>
+                                  <p>
+                                    <label>{% trans "Prioritary translation:" %}</label>
+                                    <span class="prioritary-translation">{{ item_message.valid_entry.msgstr }}</span>
+                                    <span class="hide ajax-notify ajax-success">
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
+                                    </span>
+                                    <span class="hide ajax-notify ajax-error">
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
+                                    </span>
+                                  </p>
+                                  <p>
+                                    {% trans "Update prioritary catalog with the text from the input box?" %}
+                                    <input type="hidden" class="valid-catalog" name="valid_catalog" value="{{ item_message.valid_catalog.fpath }}" />
+                                    <input type="hidden" class="entry-id" name="entry_id" value="{{ message.msgid }}" />
+                                    <input type="button" class="update-by-ajax" name="update_prioritary" value="{% trans "Yes, update" %}" />
+                                  </p>
+                                {% endif %}
                             </td>
                         {% endif %}
                             <td class="location">

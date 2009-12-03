@@ -1,0 +1,39 @@
+{% extends "transhette/base.html" %}
+{% load i18n %}
+{% block breadcumbs %}
+    <a href="{% url transhette-pick-file %}">{% trans "Home" %}</a> &rsaquo; {% trans "Translation conflicts" %}
+{% endblock %}
+{% block main %}
+  <div>
+
+    <h1>{% trans "Translation conflicts" %}</h1>
+    <ul>
+    {% spaceless %}
+    {% for conflict in conflicts %}
+      <li class="translationConflict">
+       <strong>"{{ conflict.msgstr }}"</strong>
+       <ul class="conflictList">
+       {% for item in conflict.conflict_list %}
+         <li>
+           <strong>"{{ item.msgid }}"</strong>
+           <p>{% trans "Translations" %}:</p>
+           <ul>
+           {% for entry in item.entries %}
+             <li>{% trans "Translated into" %} <pre>{{ entry.lang }}</pre> {% trans "as" %} <pre>{{ entry.entry.msgstr }}</pre></li>
+           {% endfor %}
+           </ul>
+           <p>{% trans "Occurrences" %}:</p>
+           <ul>
+           {% for occurrence in item.occurrences %}
+             <li>{% trans "File" %} <pre>{{ occurrence.file }}</pre> {% trans "at line" %} {{ occurrence.line }}</li>
+           {% endfor %}
+           </ul>
+         </li>
+       {% endfor %}
+       </ul>
+      </li>
+    {% endfor %}
+    {% endspaceless %}
+    </ul>
+  </div>
+{% endblock %}

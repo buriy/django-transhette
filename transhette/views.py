@@ -7,21 +7,48 @@ import subprocess
 
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.admin.util import unquote
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from django.utils.encoding import smart_unicode
+from django.utils import simplejson
+from django.utils.encoding import smart_unicode, smart_str
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext, get_language
-from django.views.decorators.cache import never_cache
+from django.views.decorators.cache import cache_page, never_cache
 from transhette.polib import pofile
 from transhette.forms import (UpdatePoForm, UpdateConfirmationPoForm,
                            _get_path_file, _get_lang_by_file)
 from transhette.poutil import find_pos, pagination_range, priority_merge, get_changes
 from transhette import settings as transhette_settings
 import transhette
+
+
+def search_msg_id_in_other_pos(msg_list, lang, pofile_path):
+    pofile_paths = find_pos(lang, include_djangos=transhette_settings.INCLUDE_DJANGOS, include_transhette=transhette_settings.INCLUDE_TRANSHETTE)
+    pofiles = []
+    for path in pofile_paths:
+        pofiles.append(pofile(path))
+
+    for msg in msg_list:
+        for p in pofiles:
+            valid_entry = None
+            valid_catalog = p
+            if p.fpath == pofile_path.fpath:
+                is_valid = True
+                break
+            msgid = msg['message'].msgid
+            entry = p.find(msgid)
+            if entry:
+                is_valid = False
+                valid_entry = entry
+                break
+        msg.update({'is_valid': is_valid,
+                    'valid_catalog': valid_catalog,
+                    'valid_entry': valid_entry})
+    return msg_list
 
 
 def validate_format(pofile):
@@ -165,6 +192,7 @@ def home(request):
     """
     Displays a list of messages to be translated
     """
+
     def fix_nls(in_, out_):
         """Fixes submitted translations by filtering carriage returns and pairing
         newlines at the begging and end of the translated string with the original
@@ -341,6 +369,7 @@ def home(request):
             default_column_name = False
 
         message_list = paginator.page(page).object_list
+        message_list = search_msg_id_in_other_pos(message_list, transhette_i18n_lang_code, transhette_i18n_pofile)
         needs_pagination = paginator.num_pages > 1
         if needs_pagination:
             if paginator.num_pages >= 10:
@@ -592,3 +621,144 @@ def update_confirmation(request):
 def merge(po_tmp, po_dest_file, priority):
     po_tmp = pofile(po_tmp.fpath)
     priority_merge(po_dest_file, po_tmp, priority)
+
+
+@cache_page(60 * 60 * 24)
+def translation_conflicts(request):
+    """ Returns a conflict msgid list. Same msgstr translations from different msgids """
+    locale_path = os.path.join(settings.BASEDIR, 'locale')
+    po_dict = {}
+    # fill pofile_dict
+    for lang, lang_name in settings.LANGUAGES:
+        po = pofile(os.path.join(locale_path, lang, 'LC_MESSAGES', 'django.po'))
+        po_dict[lang] = po
+        # reference po file catalog. used to find conflicts
+        main_po = po_dict['es']
+        msgstr_list = [entry.msgstr for entry in main_po]
+        msgid_list = [entry.msgid for entry in main_po]
+
+    conflicts = []
+    for msgstr in msgstr_list:
+        indexes = []
+        index = -1
+        try:
+            while True:
+                index = msgstr_list.index(msgstr, index+1)
+                entry = main_po.find(msgid_list[index])
+                if entry.translated() and not entry.msgid_plural:
+                    indexes.append(index)
+        except ValueError:
+            pass
+        if len(indexes) == 0:
+            continue # not present. usually msgstr was a database value
+        elif len(indexes) > 1:
+            # conflict happends. two or more msgid are translated into same msgstr
+            conflict = {}
+            conflict['msgstr'] = msgstr
+            conflict['conflict_list'] = []
+            for i in indexes:
+                msgid = msgid_list[i]
+                main_entry = main_po.find(msgid)
+                item = {
+                    'msgid': msgid,
+                    'entries': [],
+                    'occurrences': [],
+                }
+                for lang, po in po_dict.items():
+                    entry = po.find(msgid)
+                    if entry.translated():
+                        item['entries'].append(
+                            {'lang': lang, 'entry': entry},
+                        )
+                for occurrence in main_entry.occurrences:
+                    item['occurrences'].append(
+                        {'file': occurrence[0], 'line': occurrence[1]},
+                    )
+                conflict['conflict_list'].append(item)
+            conflicts.append(conflict)
+    return render_to_response('transhette/translation_conflicts.html',
+                              {'conflicts': conflicts,
+                               'ADMIN_MEDIA_PREFIX': settings.ADMIN_MEDIA_PREFIX},
+                              context_instance=RequestContext(request))
+
+
+def change_catalogue(request):
+    new_catalog = request.GET.get('catalog', None)
+    if not new_catalog:
+        return HttpResponseRedirect(reverse('transhette-home'))
+    reload_catalog_in_session(request, file_path=unquote(new_catalog))
+    entry_id = request.GET.get('entry_id', None)
+    if entry_id:
+        query_arg = '?query=%s' % entry_id
+    else:
+        query_arg = ''
+    return HttpResponseRedirect(reverse('transhette-home') + query_arg)
+
+
+def ajax(request):
+
+    def fix_nls(in_, out_):
+        """Fixes submitted translations by filtering carriage returns and pairing
+        newlines at the begging and end of the translated string with the original
+        """
+        if 0 == len(in_) or 0 == len(out_):
+            return out_
+
+        if "\r" in out_ and "\r" not in in_:
+            out_=out_.replace("\r", '')
+
+        if "\n" == in_[0] and "\n" != out_[0]:
+            out_ = "\n" + out_
+        elif "\n" != in_[0] and "\n" == out_[0]:
+            out_ = out_.lstrip()
+        if "\n" == in_[-1] and "\n" != out_[-1]:
+            out_ = out_ + "\n"
+        elif "\n" != in_[-1] and "\n" == out_[-1]:
+            out_ = out_.rstrip()
+        return out_
+
+    catalog = request.GET.get('catalog', None)
+    translation = request.GET.get('translation', None)
+    if not translation:
+        translation = {}
+        for key, value in request.GET.items():
+            if key.startswith('translation_'):
+                translation[key.replace('translation_', '')]=value
+    msgid = request.GET.get('msgid', None)
+    try:
+        po_file = pofile(catalog)
+        entry = po_file.find(msgid)
+    except:
+        po_file = None
+        entry = None
+    if not catalog or not translation or not msgid\
+       or not po_file or not entry:
+        raise Http404
+
+    saved = False
+    if isinstance(translation, dict):
+        for key, item in translation.items():
+            entry.msgstr_plural[key] = fix_nls(entry.msgid_plural, item)
+    else:
+        entry.msgstr = fix_nls(entry.msgid, translation)
+    if 'fuzzy' in entry.flags:
+        entry.flags.remove('fuzzy')
+    transhette_i18n_write = request.session.get('transhette_i18n_write', True)
+    format_errors = validate_format(po_file)
+    if transhette_i18n_write and not format_errors:
+        try:
+            po_file.metadata['Last-Translator'] = smart_str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
+            po_file.metadata['X-Translated-Using'] = str("django-transhette %s" % transhette.get_version(False))
+            po_file.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
+        except UnicodeDecodeError:
+            pass
+        try:
+            po_file.save()
+            po_file.save_as_mofile(po_file.fpath.replace('.po', '.mo'))
+            saved = True
+        except:
+            pass
+
+    json_dict = simplejson.dumps({'saved': saved,
+                                  'translation': translation})
+    return HttpResponse(json_dict, mimetype='text/javascript')

@@ -7,7 +7,7 @@ except NameError:
     from sets import Set as set   # Python 2.3 fallback
 
 
-def find_pos(lang, include_djangos = False, include_transhette = False):
+def find_pos(lang, include_djangos=False, include_transhette=False):
     """
     scans a couple possible repositories of gettext catalogs for the given 
     language code
