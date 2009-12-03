@@ -1,39 +1,40 @@
-import re, string, sys, os
+import re, sys, os
 from django.conf import settings
 from transhette import polib
 try:
     set
 except NameError:
     from sets import Set as set   # Python 2.3 fallback
-    
+
+
 def find_pos(lang, include_djangos = False, include_transhette = False):
     """
     scans a couple possible repositories of gettext catalogs for the given 
     language code
-    
+
     """
-    
+
     paths = []
-    
+
     # project/locale
     parts = settings.SETTINGS_MODULE.split('.')
     project = __import__(parts[0], {}, {}, [])
     paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
-    
+
     # django/locale
     if include_djangos:
         paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
-    
+
     # settings 
     for localepath in settings.LOCALE_PATHS:
         if os.path.isdir(localepath):
             paths.append(localepath)
-    
+
     # project/app/locale
     for appname in settings.INSTALLED_APPS:
         if 'transhette' == appname and include_transhette == False:
             continue
-            
+        appname = str(appname) # to avoid a fail in __import__ sentence 
         p = appname.rfind('.')
         if p >= 0:
             app = getattr(__import__(appname[:p], {}, {}, [appname[p+1:]]), appname[p+1:])
