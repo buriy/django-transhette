@@ -403,8 +403,8 @@ def restart_server(request):
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
     return render_to_response('transhette/confirm_restart.html', locals(), context_instance=RequestContext(request))
 
-home=user_passes_test(lambda user: can_translate(user), '/cuentas/entrar/')(home)
-home=never_cache(home)
+home = user_passes_test(lambda user: can_translate(user), settings.LOGIN_URL)(home)
+home = never_cache(home)
 
 
 def download_file(request):
