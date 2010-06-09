@@ -456,8 +456,8 @@ def list_languages(request):
     that can be translated and their translation progress
     """
     languages = []
-    do_django = 'django' in request.GET
-    do_transhette = 'transhette' in request.GET
+    do_django = 'django' in request.GET or transhette_settings.INCLUDE_DJANGOS
+    do_transhette = 'transhette' in request.GET or transhette_settings.INCLUDE_TRANSHETTE
     has_pos = False
     for language in settings.LANGUAGES:
         pos = find_pos(language[0], include_djangos=do_django, include_transhette=do_transhette)
@@ -483,8 +483,8 @@ def lang_sel(request, langid, idx):
         raise Http404
     else:
 
-        do_django = 'django' in request.GET
-        do_transhette = 'transhette' in request.GET
+        do_django = 'django' in request.GET or transhette_settings.INCLUDE_DJANGOS
+        do_transhette = 'transhette' in request.GET or transhette_settings.INCLUDE_TRANSHETTE
 
         request.session['transhette_i18n_lang_code'] = langid
         request.session['transhette_i18n_lang_name'] = str([l[1] for l in settings.LANGUAGES if l[0] == langid][0]).decode('utf-8')
