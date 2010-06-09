@@ -22,12 +22,12 @@ from transhette.polib import pofile
 from transhette.forms import (UpdatePoForm, UpdateConfirmationPoForm,
                            _get_path_file, _get_lang_by_file)
 from transhette.poutil import find_pos, pagination_range, priority_merge, get_changes
-from transhette import settings as transhette_settings
+from transhette.utils import get_setting
 import transhette
 
 
 def search_msg_id_in_other_pos(msg_list, lang, pofile_path):
-    pofile_paths = find_pos(lang, include_djangos=transhette_settings.INCLUDE_DJANGOS, include_transhette=transhette_settings.INCLUDE_TRANSHETTE)
+    pofile_paths = find_pos(lang, include_djangos=get_setting('INCLUDE_DJANGOS'), include_transhette=get_setting('INCLUDE_TRANSHETTE'))
     pofiles = []
     for path in pofile_paths:
         pofiles.append(pofile(path))
@@ -168,7 +168,7 @@ def do_restart(request, noresponse=False):
     * "restart_script <script_path_name>"
     """
     if request.user.is_staff:
-        reload_method = getattr(transhette_settings, 'AUTO_RELOAD_METHOD', 'test')
+        reload_method = get_setting('AUTO_RELOAD_METHOD', default='test')
 
         if reload_method == 'test':
             os.system('sleep 5 && touch settings.py &')
@@ -295,8 +295,7 @@ def home(request):
                     transhette_i18n_pofile.save_as_mofile(transhette_i18n_fn.replace('.po', '.mo'))
 
                     # Try auto-reloading via the WSGI daemon mode reload mechanism
-                    if (hasattr(transhette_settings, 'WSGI_AUTO_RELOAD') and transhette_settings.WSGI_AUTO_RELOAD or \
-                        hasattr(settings, 'WSGI_AUTO_RELOAD') and settings.WSGI_AUTO_RELOAD) and \
+                    if get_setting('WSGI_AUTO_RELOAD') and\
                         'mod_wsgi.process_group' in request.environ and \
                         request.environ.get('mod_wsgi.process_group', None) and \
                         'SCRIPT_FILENAME' in request.environ and \
@@ -327,13 +326,13 @@ def home(request):
             matched_entries = []
             for e in transhette_i18n_pofile:
                 entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
-                if transhette_settings.SEARCH_INTO_OCCURRENCES:
+                if get_setting('SEARCH_INTO_OCCURRENCES'):
                     entry_text += u''.join([o[0] for o in e.occurrences])
                 if rx.search(entry_text):
                     matched_entries.append(e)
             for e in transhette_i18n_native_pofile:
                 entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
-                if transhette_settings.SEARCH_INTO_OCCURRENCES:
+                if get_setting('SEARCH_INTO_OCCURRENCES'):
                     entry_text += u''.join([o[0] for o in e.occurrences])
                 if rx.search(entry_text):
                     lang_entry = transhette_i18n_pofile.find(e.msgid)
@@ -353,20 +352,20 @@ def home(request):
             elif transhette_i18n_filter == 'fuzzy':
                 pofile_to_paginate = transhette_i18n_pofile.fuzzy_entries()
 
-        if transhette_settings.SHOW_NATIVE_LANGUAGE and transhette_i18n_native_pofile:
+        if get_setting('SHOW_NATIVE_LANGUAGE') and transhette_i18n_native_pofile:
             to_paginate = [dict(message=message, native_message=transhette_i18n_native_pofile.find(message.msgid)) \
                             for message in pofile_to_paginate]
         else:
             to_paginate = [dict(message=message) for message in pofile_to_paginate]
 
-        paginator = Paginator(to_paginate, transhette_settings.MESSAGES_PER_PAGE)
+        paginator = Paginator(to_paginate, get_setting('MESSAGES_PER_PAGE'))
 
         if 'page' in request.GET and int(request.GET.get('page')) <= paginator.num_pages and int(request.GET.get('page')) > 0:
             page = int(request.GET.get('page'))
         else:
             page = 1
 
-        if transhette_settings.SHOW_NATIVE_LANGUAGE and transhette_i18n_lang_code != transhette_i18n_native_lang_code:
+        if get_setting('SHOW_NATIVE_LANGUAGE') and transhette_i18n_lang_code != transhette_i18n_native_lang_code:
             default_column_name = True
         else:
             default_column_name = False
@@ -380,7 +379,7 @@ def home(request):
             else:
                 page_range = range(1, 1 + paginator.num_pages)
         ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
-        ENABLE_TRANSLATION_SUGGESTIONS = transhette_settings.ENABLE_TRANSLATION_SUGGESTIONS
+        ENABLE_TRANSLATION_SUGGESTIONS = get_setting('ENABLE_TRANSLATION_SUGGESTIONS')
         return render_to_response('transhette/pofile.html', locals(),
             context_instance=RequestContext(request))
 
@@ -454,8 +453,8 @@ def list_languages(request):
     that can be translated and their translation progress
     """
     languages = []
-    do_django = 'django' in request.GET or transhette_settings.INCLUDE_DJANGOS
-    do_transhette = 'transhette' in request.GET or transhette_settings.INCLUDE_TRANSHETTE
+    do_django = 'django' in request.GET or get_setting('INCLUDE_DJANGOS')
+    do_transhette = 'transhette' in request.GET or get_setting('INCLUDE_TRANSHETTE')
     has_pos = False
     for language in settings.LANGUAGES:
         pos = find_pos(language[0], include_djangos=do_django, include_transhette=do_transhette)
@@ -481,8 +480,8 @@ def lang_sel(request, langid, idx):
         raise Http404
     else:
 
-        do_django = 'django' in request.GET or transhette_settings.INCLUDE_DJANGOS
-        do_transhette = 'transhette' in request.GET or transhette_settings.INCLUDE_TRANSHETTE
+        do_django = 'django' in request.GET or get_setting('INCLUDE_DJANGOS')
+        do_transhette = 'transhette' in request.GET or get_setting('INCLUDE_TRANSHETTE')
 
         request.session['transhette_i18n_lang_code'] = langid
         request.session['transhette_i18n_lang_name'] = str([l[1] for l in settings.LANGUAGES if l[0] == langid][0]).decode('utf-8')
@@ -502,8 +501,8 @@ def lang_sel(request, langid, idx):
             query_arg = query_arg + 'page=%d' % int(request.GET.get('page'))
 
 
-        if transhette_settings.SHOW_NATIVE_LANGUAGE:
-            native_lang = getattr(transhette_settings, 'FORCE_NATIVE_LANGUAGE_TO', get_language())
+        if get_setting('SHOW_NATIVE_LANGUAGE'):
+            native_lang = get_setting('FORCE_NATIVE_LANGUAGE_TO', default=get_language())
             request.session['transhette_i18n_native_lang_code'] = native_lang
             request.session['transhette_i18n_native_lang_name'] = str([l[1] for l in settings.LANGUAGES if l[0] == native_lang][0]).decode('utf-8')
             file_locale_path = file_.split(os.path.sep)
