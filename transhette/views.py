@@ -159,7 +159,7 @@ def inline_demo(request):
                               context_instance=RequestContext(request))
 
 
-def do_restart(request):
+def do_restart(request, noresponse=False):
     """
     * "test" for a django instance (this do a touch over settings.py for reload)
     * "apache"
@@ -171,17 +171,20 @@ def do_restart(request):
         reload_method = getattr(transhette_settings, 'AUTO_RELOAD_METHOD', 'test')
 
         if reload_method == 'test':
-            os.system('sleep 2 && touch settings.py &')
+            os.system('sleep 5 && touch settings.py &')
         ## No RedHAT or similars
         elif reload_method == 'apache2':
-            os.system('sleep 2 && sudo apache2ctl restart &')
+            os.system('sleep 5 && sudo apache2ctl restart &')
         ## RedHAT, CentOS
         elif reload_method == 'httpd':
-            os.system('sleep 2 && sudo service httpd restart &')
+            os.system('sleep 5 && sudo service httpd restart &')
 
         elif reload_method.startswith('restart_script'):
             script = reload_method.split(" ")[1]
-            os.system("sleep 2 && %s $" % script)
+            os.system("sleep 5 && %s $" % script)
+
+        if noresponse:
+            return
 
         request.user.message_set.create(message=ugettext("Server restarted. Wait 10 seconds before checking translation"))
 
@@ -392,12 +395,7 @@ def restart_server(request):
     Restart web server
     """
     if request.method == 'POST':
-        ## No RedHAT or similars
-        # os.system('sleep 5 && sudo apache2ctl restart &')
-        ## For RedHAT CentOS ..., see install for set the correct sudoers
-        # os.system('sleep 5 && sudo /usr/sbin/apachectl restart &')
-        ## For FastCGI with supervisord control
-        os.system('sleep 5 && bin/restart_django.sh & ')
+        do_restart(request, noresponse=True)
         request.user.message_set.create(message=ugettext("Server restarted. Wait 10 seconds before checking translation"))
         return HttpResponseRedirect(reverse('transhette-home'))
     ADMIN_MEDIA_PREFIX = settings.ADMIN_MEDIA_PREFIX
