@@ -2,43 +2,43 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-12 17:56+0100\n"
-"PO-Revision-Date: 2008-11-30 12:12\n"
-"Last-Translator: <antonio.mele@django.es>\n"
+"PO-Revision-Date: 2010-10-05 13:46\n"
+"Last-Translator: Manuel Saelices <msaelices@yaco.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Translated-Using: django-rosetta 0.4.RC2\n"
+"X-Translated-Using: django-transhette 0.1.SVN\n"
 
 #: views.py:152 views.py:364
 msgid "Server restarted. Wait 10 seconds before checking translation"
-msgstr ""
+msgstr "Servidor restaurado. Espere 10 segundos antes de revisar la traducción"
 
 #: templates/rosetta/base.html:32
 msgid "Welcome,"
-msgstr ""
+msgstr "Bienvenido,"
 
 #: templates/rosetta/base.html:34
 msgid "Administration"
-msgstr ""
+msgstr "Administración"
 
 #: templates/rosetta/base.html:35
 msgid "Documentation"
-msgstr ""
+msgstr "Documentación"
 
 #: templates/rosetta/base.html:36
 msgid "Change password"
-msgstr ""
+msgstr "Cambiar contraseña"
 
 #: templates/rosetta/base.html:37
 msgid "Log out"
-msgstr ""
+msgstr "Deslogarse"
 
 #: templates/rosetta/confirm_restart.html:7 templates/rosetta/pofile.html:8
 msgid "Pick another file"
@@ -55,23 +55,23 @@ msgstr "Inicio"
 
 #: templates/rosetta/confirm_restart.html:13
 msgid "Restart server"
-msgstr ""
+msgstr "Restaurar servidor"
 
 #: templates/rosetta/confirm_restart.html:18
 msgid "Are you sure you want to restart web server?"
-msgstr ""
+msgstr "¿Estás seguro que quieres restaurar el servidor?"
 
 #: templates/rosetta/confirm_restart.html:22
 msgid "Yes, I am sure"
-msgstr ""
+msgstr "Sí, estoy seguro"
 
 #: templates/rosetta/inline_demo.html:31 templates/rosetta/inline_demo.html:47
 msgid "Province"
-msgstr ""
+msgstr "Provincia"
 
 #: templates/rosetta/inline_demo.html:36 templates/rosetta/inline_demo.html:41
 msgid "Add"
-msgstr ""
+msgstr "Añadir"
 
 #: templates/rosetta/languages.html:3 templates/rosetta/languages.html.py:4
 msgid "Language selection"
@@ -102,26 +102,17 @@ msgid "Nothing to translate!"
 msgstr "¡Nada que traducir!"
 
 #: templates/rosetta/languages.html:38
-msgid ""
-"You haven't specified any languages in your settings file, or haven't yet "
-"generated a batch of translation catalogs."
-msgstr ""
-"No has especificado ningún idioma en tu archivo de settings o no has "
-"generado todavía un batch para traducción de catálogos."
+msgid "You haven't specified any languages in your settings file, or haven't yet generated a batch of translation catalogs."
+msgstr "No has especificado ningún idioma en tu archivo de settings o no has generado todavía un batch para traducción de catálogos."
 
 #: templates/rosetta/languages.html:39
 #, python-format
-msgid ""
-"Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</"
-"a> for a guide on how to set up internationalization for your project."
-msgstr ""
-"Por favor visita la <a href=\"%(i18n_doc_link)s\">Documentación de Django "
-"sobre I18N</a> para obtener una guía sobre cómo añadir internacionalización "
-"a tu proyecto."
+msgid "Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</a> for a guide on how to set up internationalization for your project."
+msgstr "Por favor visita la <a href=\"%(i18n_doc_link)s\">Documentación de Django sobre I18N</a> para obtener una guía sobre cómo añadir internacionalización a tu proyecto."
 
 #: templates/rosetta/pofile.html:7
 msgid "Restart web server"
-msgstr ""
+msgstr "Restaurar servidor"
 
 #: templates/rosetta/pofile.html:17
 msgid "Progress: %(percent_translated)s%"
@@ -129,9 +120,7 @@ msgstr "Progreso: %(percent_translated)s%"
 
 #: templates/rosetta/pofile.html:18
 msgid "File is read-only: download the file when done editing!"
-msgstr ""
-"El archivo está en modo lectura: ¡Descarga el archivo cuando termines de "
-"editarlo!"
+msgstr "El archivo está en modo lectura: ¡Descarga el archivo cuando termines de editarlo!"
 
 #: templates/rosetta/pofile.html:20
 msgid "English"
@@ -213,47 +202,44 @@ msgstr[0] "%(hits)s/%(message_number)s mensaje"
 msgstr[1] "%(hits)s/%(message_number)s mensajes"
 
 #: templates/rosetta/rosetta_header.html:10
-#, fuzzy
 msgid "See Tranlated items"
-msgstr "Traducido"
+msgstr "Ver elementos traducidos"
 
 #: templates/rosetta/rosetta_header.html:11
-#, fuzzy
 msgid "See not translated items"
-msgstr "Guardar y traducir siguiente bloque"
+msgstr "Ver elementos no traducidos"
 
 #: templates/rosetta/rosetta_header.html:12
 msgid "Apply changes"
-msgstr ""
+msgstr "Aplicar cambios"
 
 #: templates/rosetta/rosetta_header.html:21
-#, fuzzy
 msgid "Give a new translation for "
-msgstr "Guardar y traducir siguiente bloque"
+msgstr "Dar una nueva traducción para"
 
 #: templates/rosetta/rosetta_header.html:26
 msgid "You're sending a empty translation ¿Are you sure? "
-msgstr ""
+msgstr "Estás enviado una traducción vacía ¿Estás seguro?"
 
 #: templates/rosetta/rosetta_header.html:45
 msgid "Can't send translation"
-msgstr ""
+msgstr "No puede enviar traducción"
 
 #: templates/rosetta/rosetta_header.html:112
 msgid "Applying Changes"
-msgstr ""
+msgstr "Aplicar cambios"
 
 #: templates/rosetta/rosetta_header.html:121
 msgid "Reloading"
-msgstr ""
+msgstr "Recargando"
 
 #: templates/rosetta/rosetta_header.html:124
 msgid "Apply Changes"
-msgstr ""
+msgstr "Aplicar Cambios"
 
 #: templates/rosetta/rosetta_header.html:129
 msgid "Can't restart server"
-msgstr ""
+msgstr "No puede restaurar servidor"
 
 #~ msgid "Search"
-#~ msgstr "Búsqueda"
+#~ msgstr "Buscar"
