@@ -15,4 +15,6 @@ urlpatterns = patterns('transhette.views',
     url(r'^change/catalogue/$', 'change_catalogue', name='transhette-change-catalogue'),
     url(r'^translation_conflicts/$', 'translation_conflicts', name='translation_conflicts'),
     url(r'^ajax/$', 'ajax', name='transhette-ajax'),
+    url(r'^ajax/restart/$', 'ajax_restart', name='transhette-ajax-restart'),
+    url(r'^ajax/are_you_wakeup/$', 'ajax_is_wakeup', name='transhette-ajax-is-wakeup'),
 )

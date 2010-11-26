@@ -159,7 +159,7 @@ def inline_demo(request):
                               context_instance=RequestContext(request))
 
 
-def do_restart(request, noresponse=False):
+def do_restart(request, noresponse=False, with_ajax=False):
     """
     * "test" for a django instance (this do a touch over settings.py for reload)
     * "apache"
@@ -167,21 +167,27 @@ def do_restart(request, noresponse=False):
     * "wsgi"
     * "restart_script <script_path_name>"
     """
+    if not with_ajax:
+        sleep = 'sleep 5 && '
+    else:
+        sleep = ''
+        noresponse=True
+
     if request.user.is_staff:
         reload_method = get_setting('AUTO_RELOAD_METHOD', default='test')
 
         if reload_method == 'test':
-            os.system('sleep 5 && touch settings.py &')
+            os.system('%stouch settings.py &' % sleep)
         ## No RedHAT or similars
         elif reload_method == 'apache2':
-            os.system('sleep 5 && sudo apache2ctl restart &')
+            os.system('%ssudo apache2ctl restart &' % sleep)
         ## RedHAT, CentOS
         elif reload_method == 'httpd':
-            os.system('sleep 5 && sudo service httpd restart &')
+            os.system('%ssudo service httpd restart &' % sleep)
 
         elif reload_method.startswith('restart_script'):
             script = reload_method.split(" ")[1]
-            os.system("sleep 5 && %s $" % script)
+            os.system("%s%s $" % (sleep, script))
 
         if noresponse:
             return
@@ -758,4 +764,15 @@ def ajax(request):
 
     json_dict = simplejson.dumps({'saved': saved,
                                   'translation': translation})
+    return HttpResponse(json_dict, mimetype='text/javascript')
+
+
+def ajax_restart(request):
+    json_dict = simplejson.dumps({'restarting': True})
+    do_restart(request, noresponse=True, with_ajax=True)
+    return HttpResponse(json_dict, mimetype='text/javascript')
+
+
+def ajax_is_wakeup(request):
+    json_dict = simplejson.dumps({'wakeup': True})
     return HttpResponse(json_dict, mimetype='text/javascript')
