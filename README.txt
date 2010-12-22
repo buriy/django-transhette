@@ -1,5 +1,3 @@
-.. contents::
-
 ==========
 Transhette
 ==========
@@ -23,7 +21,6 @@ under the MIT License.
 Transhette is distributed under the terms of the `GNU Lesser General Public
 License <http://www.gnu.org/licenses/lgpl.html>`_.
 
-=============
 Documentation
 =============
 
@@ -32,10 +29,10 @@ Installation
 
 To install transhette:
 
-    1. Download the application and place the transhette folder anywhere in your Python path (your project directory is fine, 
-    but anywhere else in your python path will do)
-    2. Add a 'transhette' line to the INSTALLED_APPS in your project's settings.py
-    3. Add an URL entry to your project's urls.py, for example:
+1. Download the application and place the transhette folder anywhere in your Python path (your project directory is fine, 
+   but anywhere else in your python path will do)
+2. Add a 'transhette' line to the INSTALLED_APPS in your project's settings.py
+3. Add an URL entry to your project's urls.py, for example::
 
     from django.conf import settings
     if 'transhette' in settings.INSTALLED_APPS:
@@ -43,12 +40,12 @@ To install transhette:
             url(r'^transhette/', include('transhette.urls')),
             )
 
-    Note: you can use whatever you wish as the URL prefix.
+Note: you can use whatever you wish as the URL prefix.
 
-    To uninstall transhette:
+To uninstall transhette:
 
-    1. Comment out or remove the 'transhette' line in your INSTALLED_APPS
-    2. Comment out or remove the url inclusion 
+1. Comment out or remove the 'transhette' line in your INSTALLED_APPS
+2. Comment out or remove the url inclusion 
 
 Security
 --------
@@ -58,9 +55,8 @@ the administrator user only (as defined in your project's Admin interface)
 
 If you wish to grant editing access to other users:
 
-   1. create a 'translators' group in your admin interface
-   2. add the user you wish to grant translating rights to this group 
-
+1. create a 'translators' group in your admin interface
+2. add the user you wish to grant translating rights to this group 
 
 Tutorial
 --------
@@ -85,7 +81,6 @@ and "Fuzzy". Fuzzy strings are the ones that have been automatically translated 
 so be careful about them. You *should* check all Fuzzy Strings before saving your catalog. 
 You can identify them in search results because they are yellow colored.
 
-
 As well as you can download the catalog you are editing, you can also upload a catalog. 
 The "Priority" option defines if the catalog that is going to be uploaded has priority
 over the stored one. This means that *without* priority if transhette finds in the new catalog
@@ -105,11 +100,11 @@ You can get the last bleeding edge version of transhette by doing
 a checkout of its subversion repository. This way you can add it
 as an external into your main project directory::
 
-svn checkout http://svnpub.yaco.es/djangoapps/transhette/trunk transhette
+    svn checkout http://svnpub.yaco.es/djangoapps/transhette/trunk transhette
 
 Bug reports, patches and suggestions are more than welcome. Just put
 them in our Trac system and use the 'transhette' component when you fill
 tickets::
 
-http://tracpub.yaco.es/djangoapps/
+    http://tracpub.yaco.es/djangoapps/
 
