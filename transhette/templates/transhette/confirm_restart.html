@@ -2,6 +2,7 @@
 {% load i18n %}
 
 {% block extrahead %}
+    {{ block.super }}
     <script type="text/javascript" src="{{ MEDIA_URL }}transhette/js/jquery-1.4.2.min.js"></script>
     <script type="text/javascript" src="{{ MEDIA_URL }}transhette/js/jquery.transhette-restart.js"></script>
 {% endblock %}
