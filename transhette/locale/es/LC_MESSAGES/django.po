@@ -55,11 +55,11 @@ msgstr "Inicio"
 
 #: templates/rosetta/confirm_restart.html:13
 msgid "Restart server"
-msgstr "Restaurar servidor"
+msgstr "Reiniciar servidor"
 
 #: templates/rosetta/confirm_restart.html:18
 msgid "Are you sure you want to restart web server?"
-msgstr "¿Estás seguro que quieres restaurar el servidor?"
+msgstr "¿Estás seguro que quieres reiniciar el servidor?"
 
 #: templates/rosetta/confirm_restart.html:22
 msgid "Yes, I am sure"
@@ -112,7 +112,7 @@ msgstr "Por favor visita la <a href=\"%(i18n_doc_link)s\">Documentación de Djan
 
 #: templates/rosetta/pofile.html:7
 msgid "Restart web server"
-msgstr "Restaurar servidor"
+msgstr "Reiniciar servidor"
 
 #: templates/rosetta/pofile.html:17
 msgid "Progress: %(percent_translated)s%"
@@ -239,7 +239,7 @@ msgstr "Aplicar Cambios"
 
 #: templates/rosetta/rosetta_header.html:129
 msgid "Can't restart server"
-msgstr "No puede restaurar servidor"
+msgstr "No puede reiniciar servidor"
 
 #~ msgid "Search"
 #~ msgstr "Buscar"

@@ -23,11 +23,11 @@ def read(*rnames):
 
 setup(
     name="transhette",
-    version="0.5.3",
+    version="0.5.4",
     author="Yaco Sistemas S.L.",
     author_email="esanchez@yaco.es",
     description="django-rosetta fork for translating Django .po catalogs, with a lot of improvements compared with rosetta",
-    long_description=(read('README.txt')),
+    long_description=(read('README.txt') + '\n\n' + read('CHANGES.txt')),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: Django',
