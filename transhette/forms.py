@@ -86,7 +86,7 @@ class UpdatePoForm(FormAdminDjango):
         choices = [('', '-----')]
         for language in settings.LANGUAGES:
             l_extend = poutil.find_pos(language[0], include_djangos=False, include_transhette=False)
-            l_extend = [item.split(settings.BASEDIR)[1] for item in l_extend]
+            l_extend = [item.split(settings.BASEDIR)[1] for item in l_extend if item.startswith(settings.BASEDIR)]
             l.extend(l_extend)
         for item in l:
             item_split = item.split('/')

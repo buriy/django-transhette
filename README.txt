@@ -31,8 +31,13 @@ To install transhette:
 
 1. Download the application and place the transhette folder anywhere in your Python path (your project directory is fine, 
    but anywhere else in your python path will do)
-2. Add a 'transhette' line to the INSTALLED_APPS in your project's settings.py
-3. Add an URL entry to your project's urls.py, for example::
+2. Add a ``transhette`` line to the ``INSTALLED_APPS`` in your project's ``settings.py``
+3. Add a ``BASEDIR`` settings in your project's ``settings.py``, with a value like this::
+
+    from os import path
+    BASEDIR = path.dirname(path.abspath(__file__))
+
+4. Add an URL entry to your project's urls.py, for example::
 
     from django.conf import settings
     if 'transhette' in settings.INSTALLED_APPS:
