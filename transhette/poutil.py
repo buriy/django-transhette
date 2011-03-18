@@ -19,6 +19,20 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
 
     paths = []
 
+    # project/locale
+    parts = settings.SETTINGS_MODULE.split('.')
+    project = __import__(parts[0], {}, {}, [])
+    paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
+
+    # django/locale
+    if include_djangos:
+        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
+
+    # settings
+    for localepath in settings.LOCALE_PATHS:
+        if os.path.isdir(localepath):
+            paths.append(localepath)
+
     # project/app/locale
     for appname in reversed(settings.INSTALLED_APPS):
         if 'transhette' == appname and include_transhette == False:
@@ -34,20 +48,6 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
 
         if os.path.isdir(apppath):
             paths.append(apppath)
-
-    # project/locale
-    parts = settings.SETTINGS_MODULE.split('.')
-    project = __import__(parts[0], {}, {}, [])
-    paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
-
-    # settings
-    for localepath in settings.LOCALE_PATHS:
-        if os.path.isdir(localepath):
-            paths.append(localepath)
-
-    # django/locale
-    if include_djangos:
-        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
 
     ret = []
     rx=re.compile(r'(\w+)/../\1')
