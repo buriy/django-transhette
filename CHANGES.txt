@@ -1,6 +1,12 @@
 Changes
 =======
 
+Version 0.5.5
+-------------
+
+* Fixed translation when label was in two or more catalog. A priority 
+calculation mismatch.
+
 Version 0.5.4
 -------------
 
