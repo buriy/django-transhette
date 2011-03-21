@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.5.6
+-------------
+
+* Fix typo ($ instead of &) in restart_script reload mode.
+
 Version 0.5.5
 -------------
 
