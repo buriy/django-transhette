@@ -186,8 +186,8 @@ def do_restart(request, noresponse=False, with_ajax=False):
             os.system('%ssudo service httpd restart &' % sleep)
 
         elif reload_method.startswith('restart_script'):
-            script = reload_method.split(" ")[1]
-            os.system("%s%s $" % (sleep, script))
+            script = reload_method.split(" ", 1)[1]
+            os.system("%s%s &" % (sleep, script))
 
         if noresponse:
             return
