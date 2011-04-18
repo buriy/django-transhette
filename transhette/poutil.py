@@ -2,12 +2,80 @@ import re
 import sys
 import os
 
+from django import VERSION as django_version
 from django.conf import settings
 from transhette import polib
 try:
     set
 except NameError:
     from sets import Set as set   # Python 2.3 fallback
+
+
+def get_orderer_path_list(include_djangos, include_transhette):
+    paths = []
+
+    if django_version[0] < 1 or (django_version[0] == 1 and django_version[1] < 3):  # Before django 1.3
+        # project/locale
+        parts = settings.SETTINGS_MODULE.split('.')
+        project = __import__(parts[0], {}, {}, [])
+        paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
+
+        # settings
+        for localepath in reversed(settings.LOCALE_PATHS):
+            if os.path.isdir(localepath):
+                paths.append(localepath)
+
+        # project/app/locale
+        for appname in reversed(settings.INSTALLED_APPS):
+            if 'transhette' == appname and include_transhette == False:
+                continue
+            appname = str(appname)  # to avoid a fail in __import__ sentence
+            p = appname.rfind('.')
+            if p >= 0:
+                app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
+            else:
+                app = __import__(appname, {}, {}, [])
+
+            apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
+
+            if os.path.isdir(apppath):
+                paths.append(apppath)
+    else:  # Django 1.3
+        # settings
+        for localepath in settings.LOCALE_PATHS:
+            if os.path.isdir(localepath):
+                paths.append(localepath)
+
+        # project/locale
+        parts = settings.SETTINGS_MODULE.split('.')
+        project = __import__(parts[0], {}, {}, [])
+        projectpath = os.path.join(os.path.dirname(project.__file__), 'locale')
+        localepaths = [os.path.normpath(path) for path in settings.LOCALE_PATHS]
+        if (projectpath and os.path.isdir(projectpath) and
+            os.path.normpath(projectpath) not in localepaths):
+            paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
+
+        # project/app/locale
+        for appname in settings.INSTALLED_APPS:
+            if 'transhette' == appname and include_transhette == False:
+                continue
+            appname = str(appname)  # to avoid a fail in __import__ sentence
+            p = appname.rfind('.')
+            if p >= 0:
+                app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
+            else:
+                app = __import__(appname, {}, {}, [])
+
+            apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
+
+            if os.path.isdir(apppath):
+                paths.append(apppath)
+
+    # django/locale
+    if include_djangos:
+        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
+
+    return paths
 
 
 def find_pos(lang, include_djangos=False, include_transhette=False):
@@ -17,37 +85,7 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
 
     """
 
-    paths = []
-
-    # project/locale
-    parts = settings.SETTINGS_MODULE.split('.')
-    project = __import__(parts[0], {}, {}, [])
-    paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
-
-    # settings
-    for localepath in settings.LOCALE_PATHS:
-        if os.path.isdir(localepath):
-            paths.append(localepath)
-
-    # project/app/locale
-    for appname in reversed(settings.INSTALLED_APPS):
-        if 'transhette' == appname and include_transhette == False:
-            continue
-        appname = str(appname)  # to avoid a fail in __import__ sentence
-        p = appname.rfind('.')
-        if p >= 0:
-            app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
-        else:
-            app = __import__(appname, {}, {}, [])
-
-        apppath = os.path.join(os.path.dirname(app.__file__), 'locale')
-
-        if os.path.isdir(apppath):
-            paths.append(apppath)
-
-    # django/locale
-    if include_djangos:
-        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
+    paths = get_orderer_path_list(include_djangos, include_transhette)
 
     ret = []
     rx = re.compile(r'(\w+)/../\1')
