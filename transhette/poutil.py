@@ -24,10 +24,6 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
     project = __import__(parts[0], {}, {}, [])
     paths.append(os.path.join(os.path.dirname(project.__file__), 'locale'))
 
-    # django/locale
-    if include_djangos:
-        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
-
     # settings
     for localepath in settings.LOCALE_PATHS:
         if os.path.isdir(localepath):
@@ -37,10 +33,10 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
     for appname in reversed(settings.INSTALLED_APPS):
         if 'transhette' == appname and include_transhette == False:
             continue
-        appname = str(appname) # to avoid a fail in __import__ sentence
+        appname = str(appname)  # to avoid a fail in __import__ sentence
         p = appname.rfind('.')
         if p >= 0:
-            app = getattr(__import__(appname[:p], {}, {}, [appname[p+1:]]), appname[p+1:])
+            app = getattr(__import__(appname[:p], {}, {}, [appname[p + 1:]]), appname[p + 1:])
         else:
             app = __import__(appname, {}, {}, [])
 
@@ -49,22 +45,26 @@ def find_pos(lang, include_djangos=False, include_transhette=False):
         if os.path.isdir(apppath):
             paths.append(apppath)
 
+    # django/locale
+    if include_djangos:
+        paths.append(os.path.join(os.path.dirname(sys.modules[settings.__module__].__file__), 'locale'))
+
     ret = []
-    rx=re.compile(r'(\w+)/../\1')
+    rx = re.compile(r'(\w+)/../\1')
     langs = (lang, )
     if u'-' in lang:
         _l, _c = map(lambda x: x.lower(), lang.split(u'-'))
-        langs += (u'%s_%s' %(_l, _c), u'%s_%s' %(_l, _c.upper()), )
+        langs += (u'%s_%s' % (_l, _c), u'%s_%s' % (_l, _c.upper()), )
     elif u'_' in lang:
         _l, _c = map(lambda x: x.lower(), lang.split(u'_'))
-        langs += (u'%s-%s' %(_l, _c), u'%s-%s' %(_l, _c.upper()), )
+        langs += (u'%s-%s' % (_l, _c), u'%s-%s' % (_l, _c.upper()), )
 
     for path in paths:
         for lang_ in langs:
-            dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' %(path, lang_))
+            dirname = rx.sub(r'\1', '%s/%s/LC_MESSAGES/' % (path, lang_))
             for fn in ('django.po', 'djangojs.po', ):
-                if os.path.isfile(dirname+fn) and os.path.abspath((dirname+fn)) not in ret:
-                    ret.append(os.path.abspath(dirname+fn))
+                if os.path.isfile(dirname + fn) and os.path.abspath((dirname + fn)) not in ret:
+                    ret.append(os.path.abspath(dirname + fn))
     return ret
 
 
@@ -73,21 +73,21 @@ def pagination_range(first, last, current):
 
     r.append(first)
     if first + 1 < last:
-        r.append(first+1)
+        r.append(first + 1)
 
-    if current -2 > first and current -2 < last:
-        r.append(current-2)
-    if current -1 > first and current -1 < last:
-        r.append(current-1)
+    if current - 2 > first and current - 2 < last:
+        r.append(current - 2)
+    if current - 1 > first and current - 1 < last:
+        r.append(current - 1)
     if current > first and current < last:
         r.append(current)
-    if current + 1 < last and current+1 > first:
-        r.append(current+1)
-    if current + 2 < last and current+2 > first:
-        r.append(current+2)
+    if current + 1 < last and current + 1 > first:
+        r.append(current + 1)
+    if current + 2 < last and current + 2 > first:
+        r.append(current + 2)
 
-    if last-1 > first:
-        r.append(last-1)
+    if last - 1 > first:
+        r.append(last - 1)
     r.append(last)
 
     r = list(set(r))
@@ -123,7 +123,7 @@ def priority_merge(po_destination, po_source, priority=False):
             new_entry = polib.POEntry(msgid=entry.msgid,
                                       occurrences=entry.occurrences,
                                       comment=entry.comment,
-                                      msgstr = entry.msgstr)
+                                      msgstr=entry.msgstr)
             po_destination.append(new_entry)
     po_destination.save()
 
