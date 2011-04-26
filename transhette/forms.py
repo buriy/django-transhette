@@ -37,7 +37,7 @@ class UpdatePoForm(FormAdminDjango):
 
             language_choices = [('', '-----')]
             if hasattr(settings, 'LANGUAGES'):
-                language_choices.extend([(key, "%s (%s)" %(value, key)) \
+                language_choices.extend([(key, "%s (%s)" % (value, key)) \
                                         for key, value in dict(settings.LANGUAGES).items()])
             self.fields['language'] = forms.ChoiceField(choices=language_choices, required=False)
             self.fields.keyOrder = ['application', 'language', 'priority', 'file']
@@ -104,6 +104,8 @@ class UpdatePoForm(FormAdminDjango):
 def _get_lang(lang, lang_cleaned_data=None):
     if lang_cleaned_data:
         return lang_cleaned_data
+    if not lang:
+        return ''
     lang = lang.replace('\n', '')
     lang = lang.strip()
     lang_words = lang.split(' ')
@@ -127,6 +129,9 @@ def _get_application(application, application_cleaned_data=None):
             return app
         else:
             return ''
+
+    if not application:
+        return ''
 
     application = application.replace('\n', '')
     application = application.strip()
