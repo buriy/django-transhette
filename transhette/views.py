@@ -328,22 +328,27 @@ def home(request):
 
         if 'query' in request.REQUEST and request.REQUEST.get('query', '').strip():
             query = request.REQUEST.get('query').strip()
-            rx = re.compile(query, re.IGNORECASE)
+            try:
+                rx = re.compile(re.escape(query), re.IGNORECASE)
+            except re.error:
+                rx = None
+
             matched_entries = []
-            for e in transhette_i18n_pofile:
-                entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
-                if get_setting('SEARCH_INTO_OCCURRENCES'):
-                    entry_text += u''.join([o[0] for o in e.occurrences])
-                if rx.search(entry_text):
-                    matched_entries.append(e)
-            for e in transhette_i18n_native_pofile:
-                entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
-                if get_setting('SEARCH_INTO_OCCURRENCES'):
-                    entry_text += u''.join([o[0] for o in e.occurrences])
-                if rx.search(entry_text):
-                    lang_entry = transhette_i18n_pofile.find(e.msgid)
-                    if lang_entry and not lang_entry in matched_entries:
-                        matched_entries.append(lang_entry)
+            if rx:
+                for e in transhette_i18n_pofile:
+                    entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
+                    if get_setting('SEARCH_INTO_OCCURRENCES'):
+                        entry_text += u''.join([o[0] for o in e.occurrences])
+                    if rx.search(entry_text):
+                        matched_entries.append(e)
+                for e in transhette_i18n_native_pofile:
+                    entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
+                    if get_setting('SEARCH_INTO_OCCURRENCES'):
+                        entry_text += u''.join([o[0] for o in e.occurrences])
+                    if rx.search(entry_text):
+                        lang_entry = transhette_i18n_pofile.find(e.msgid)
+                        if lang_entry and not lang_entry in matched_entries:
+                            matched_entries.append(lang_entry)
             pofile_to_paginate = matched_entries
         else:
             if transhette_i18n_filter == 'both':
