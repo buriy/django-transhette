@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.5.8
+-------------
+
+* Improve robustness against malformed search strings
+
 Version 0.5.7
 -------------
 
