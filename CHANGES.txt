@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.5.9
+-------------
+
+* Changed ajax-url from template block just in case someone drops the header block in the base template
+
 Version 0.5.8
 -------------
 
