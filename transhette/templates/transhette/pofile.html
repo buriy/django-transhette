@@ -87,7 +87,6 @@
             </span>
         </p>
     </div>
-    <input type="hidden" id="transhette-ajax-url" name="transhette-ajax-url" value="{% url transhette-ajax %}" />
 {% endblock %}
 {% block breadcumbs %}
     <a href="{% url transhette-pick-file %}">{% trans "Home" %}</a> &rsaquo; 
@@ -98,6 +97,7 @@
 {% endblock %}
 {% block pagetitle %}{% trans "English" %} - {{transhette_i18n_lang_name}} ({{ transhette_i18n_pofile.percent_translated|floatformat:0 }}%){% endblock %}
 {% block main %}
+    <input type="hidden" id="transhette-ajax-url" name="transhette-ajax-url" value="{% url transhette-ajax %}" />
     <h1>{% blocktrans  %}Translate into {{transhette_i18n_lang_name}}{% endblocktrans %}</h1>
     
     <ul class="object-tools">
