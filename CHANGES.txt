@@ -1,6 +1,11 @@
 Changes
 =======
 
+Version 0.5.10
+-------------
+
+* Fixed unicode errors when last-editor header contains unicode characters
+
 Version 0.5.9
 -------------
 
