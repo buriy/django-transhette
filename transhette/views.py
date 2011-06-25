@@ -4,6 +4,7 @@ import datetime
 import tempfile
 import zipfile
 import subprocess
+import unicodedata
 
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
@@ -137,7 +138,7 @@ def set_new_translation(request):
         format_errors = validate_format(selected_pofile)
         if not format_errors:
             try:
-                selected_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
+                selected_pofile.metadata['Last-Translator'] = unicodedata.normalize('NFKD', u"%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email)).encode('ascii', 'ignore')
                 selected_pofile.metadata['X-Translated-Using'] = str("django-transhette %s" % transhette.get_version(False))
                 selected_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
             except UnicodeDecodeError:
@@ -291,7 +292,7 @@ def home(request):
                 reload_if_catalog_updated(request, polling=True)
 
                 try:
-                    transhette_i18n_pofile.metadata['Last-Translator'] = str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
+                    transhette_i18n_pofile.metadata['Last-Translator'] = unicodedata.normalize('NFKD', u"%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email)).encode('ascii', 'ignore')
                     transhette_i18n_pofile.metadata['X-Translated-Using'] = str("django-transhette %s" % transhette.get_version(False))
                     transhette_i18n_pofile.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
                 except UnicodeDecodeError:
@@ -755,7 +756,7 @@ def ajax(request):
     format_errors = validate_format(po_file)
     if transhette_i18n_write and not format_errors:
         try:
-            po_file.metadata['Last-Translator'] = smart_str("%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email))
+            po_file.metadata['Last-Translator'] = unicodedata.normalize('NFKD', u"%s %s <%s>" %(request.user.first_name, request.user.last_name, request.user.email)).encode('ascii', 'ignore')
             po_file.metadata['X-Translated-Using'] = str("django-transhette %s" % transhette.get_version(False))
             po_file.metadata['PO-Revision-Date'] = datetime.datetime.now().strftime('%Y-%m-%d %H:%M%z')
         except UnicodeDecodeError:
