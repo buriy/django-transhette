@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2009-03-12 17:56+0100\n"
-"PO-Revision-Date: 2011-07-12 13:46\n"
+"PO-Revision-Date: 2011-07-12 13:54\n"
 "Last-Translator: <burchik@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -145,7 +145,7 @@ msgstr "Только с переводом"
 
 #: templates/rosetta/pofile.html:28
 msgid "Fuzzy"
-msgstr "Устаревшие"
+msgstr "Неточные переводы"
 
 #: templates/rosetta/pofile.html:29
 msgid "Both"
