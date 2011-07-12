@@ -3,8 +3,8 @@
 
 {% block extrahead %}
     {{ block.super }}
-    <script type="text/javascript" src="{{ MEDIA_URL }}transhette/js/jquery-1.4.2.min.js"></script>
-    <script type="text/javascript" src="{{ MEDIA_URL }}transhette/js/jquery.transhette-restart.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}transhette/js/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}transhette/js/jquery.transhette-restart.js"></script>
 {% endblock %}
 
 {% block header %}
@@ -25,6 +25,7 @@
     <h1>{% trans "Are you sure you want to restart web server?" %}</h1>
 
     <form action="" method="post" class="restartForm">
+    {% csrf_token %}
     <span style="display:none;" class="ajax_restart">{% url transhette-ajax-restart %}</span>
     <span style="display:none;" class="ajax_wakeup">{% url transhette-ajax-is-wakeup %}</span>
     <div class="submit-row" style="text-align: center">

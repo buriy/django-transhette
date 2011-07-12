@@ -3,7 +3,7 @@
 
 {% block extrahead %}
   {{ block.super }}
-  <script src="{{ MEDIA_URL }}js/jquery-1.4.2.min.js"></script>
+  <script src="{{ STATIC_URL }}transhette/js/jquery-1.4.2.min.js"></script>
   <script type="text/javascript">
   // <![CDATA[
   (function($) {
@@ -110,8 +110,9 @@
     <div id="changelist" class="module{% if transhette_i18n_lang_bidi %} rtl{% endif %}">
         <div id="toolbar">
         <form id="changelist-search" action="" method="post">
+            {% csrf_token %}
             <div><!-- DIV needed for valid HTML -->
-                <label for="searchbar"><img src="{{ADMIN_MEDIA_PREFIX}}img/admin/icon_searchbox.png" alt="{% trans "transhette_search" %}" /></label>
+                <label for="searchbar"><img src="{{ADMIN_MEDIA_PREFIX}}img/icon_searchbox.png" alt="{% trans "transhette_search" %}" /></label>
                 <input type="text" size="40" name="query" value="{{query}}" id="searchbar" />
                 <input type="submit" name="search" value="{% trans "Go" %}" />
             </div>
@@ -119,6 +120,7 @@
         </div>
         
         <form method="post" action="">
+        {% csrf_token %}
         {% if format_errors %}
         <ul>
           {% for error in format_errors %}

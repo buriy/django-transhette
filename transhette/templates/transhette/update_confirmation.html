@@ -53,7 +53,8 @@
 
 
     <form action="." method="POST" enctype="multipart/form-data">
-            {{ form.as_django_admin }}
+        {% csrf_token %}
+        {{ form.as_django_admin }}
         <div class="submit-row">
             <input type="submit" name="_save" class="default" value="{% trans "Confirmation" %}"/>
         </div>
