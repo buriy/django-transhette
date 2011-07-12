@@ -44,9 +44,9 @@ WSGI_AUTO_RELOAD = False
 """
 AUTO_RELOAD_METHOD = 'test'
 
-SHOW_NATIVE_LANGUAGE = True
+SHOW_NATIVE_LANGUAGE = False
 
-FORCE_NATIVE_LANGUAGE_TO = 'es'
+FORCE_NATIVE_LANGUAGE_TO = 'en'
 
 # List django and rosetta catalogs
 INCLUDE_DJANGOS = False

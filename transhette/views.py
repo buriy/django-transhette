@@ -9,6 +9,7 @@ import unicodedata
 from django.conf import settings
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.admin.util import unquote
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.http import Http404, HttpResponseRedirect, HttpResponse
@@ -343,14 +344,15 @@ def home(request):
                         entry_text += u''.join([o[0] for o in e.occurrences])
                     if rx.search(entry_text):
                         matched_entries.append(e)
-                for e in transhette_i18n_native_pofile:
-                    entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
-                    if get_setting('SEARCH_INTO_OCCURRENCES'):
-                        entry_text += u''.join([o[0] for o in e.occurrences])
-                    if rx.search(entry_text):
-                        lang_entry = transhette_i18n_pofile.find(e.msgid)
-                        if lang_entry and not lang_entry in matched_entries:
-                            matched_entries.append(lang_entry)
+                if transhette_i18n_native_pofile:
+                    for e in transhette_i18n_native_pofile:
+                        entry_text = smart_unicode(e.msgstr) + smart_unicode(e.msgid)
+                        if get_setting('SEARCH_INTO_OCCURRENCES'):
+                            entry_text += u''.join([o[0] for o in e.occurrences])
+                        if rx.search(entry_text):
+                            lang_entry = transhette_i18n_pofile.find(e.msgid)
+                            if lang_entry and not lang_entry in matched_entries:
+                                matched_entries.append(lang_entry)
             pofile_to_paginate = matched_entries
         else:
             if transhette_i18n_filter == 'both':
@@ -408,7 +410,7 @@ def restart_server(request):
     """
     if request.method == 'POST':
         do_restart(request, noresponse=True)
-        request.user.message_set.create(message=ugettext("Server restarted. Wait 10 seconds before checking translation"))
+        messages.success(request, ugettext("Server restarted. Wait 10 seconds before checking translation"))
         return HttpResponseRedirect(reverse('transhette-home'))
     ADMIN_MEDIA_PREFIX = STATIC_ADMIN
     return render_to_response('transhette/confirm_restart.html', locals(), context_instance=RequestContext(request))
