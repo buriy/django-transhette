@@ -27,7 +27,7 @@ from transhette.poutil import find_pos, pagination_range, priority_merge, get_ch
 from transhette.utils import get_setting
 import transhette
 
-STATIC_ADMIN = settings.STATIC_URL + 'admin/'
+ADMIN_PREFIX = settings.STATIC_URL + 'admin/'
 
 def search_msg_id_in_other_pos(msg_list, lang, pofile_path):
     pofile_paths = find_pos(lang, include_djangos=get_setting('INCLUDE_DJANGOS'), include_transhette=get_setting('INCLUDE_TRANSHETTE'))
@@ -76,9 +76,9 @@ def validate_format(pofile):
                 text = input_lines[line_number - 1]
                 return text + ': ' + parts[2]
             else:
-                'Unknown error: ' + line
+                return 'Unknown error: ' + line
 
-        errors = [format_error_line(line) for line in error_lines]
+        errors = [format_error_line(line) for line in error_lines if line]
 
     os.unlink(temp_file)
     return errors
@@ -101,11 +101,17 @@ def reload_if_catalog_updated(request, polling=False):
     """ Compares modification time of catalog file with session last modification time, and reload if necessary
         This will avoid main concurrence problems """
     file_path = request.session['transhette_i18n_fn']
-    file_mtime = os.stat(file_path)[-2]
+    try:
+        file_mtime = os.stat(file_path)[-2]
+    except:
+        file_mtime = 0
     session_mtime = request.session.get('transhette_i18n_mtime')
     if polling:
         while session_mtime and file_mtime < session_mtime:
-            file_mtime = os.stat(file_path)[-2]
+            try:
+                file_mtime = os.stat(file_path)[-2]
+            except:
+                file_mtime = 0
             reload_catalog_in_session(request)
             session_mtime = request.session.get('transhette_i18n_mtime')
     else:
@@ -393,7 +399,7 @@ def home(request):
                 page_range = pagination_range(1, paginator.num_pages, page)
             else:
                 page_range = range(1, 1 + paginator.num_pages)
-        ADMIN_MEDIA_PREFIX = STATIC_ADMIN
+        ADMIN_MEDIA_PREFIX = ADMIN_PREFIX
         ENABLE_TRANSLATION_SUGGESTIONS = get_setting('ENABLE_TRANSLATION_SUGGESTIONS')
         return render_to_response('transhette/pofile.html', locals(),
             context_instance=RequestContext(request))
@@ -412,7 +418,7 @@ def restart_server(request):
         do_restart(request, noresponse=True)
         messages.success(request, ugettext("Server restarted. Wait 10 seconds before checking translation"))
         return HttpResponseRedirect(reverse('transhette-home'))
-    ADMIN_MEDIA_PREFIX = STATIC_ADMIN
+    ADMIN_MEDIA_PREFIX = ADMIN_PREFIX
     return render_to_response('transhette/confirm_restart.html', locals(), context_instance=RequestContext(request))
 
 home = user_passes_test(lambda user: can_translate(user), settings.LOGIN_URL)(home)
@@ -480,7 +486,7 @@ def list_languages(request):
             [(os.path.realpath(l), pofile(l)) for l in pos],
             )
         )
-    ADMIN_MEDIA_PREFIX = STATIC_ADMIN
+    ADMIN_MEDIA_PREFIX = ADMIN_PREFIX
     version = transhette.get_version(True)
     return render_to_response('transhette/languages.html', locals(), context_instance=RequestContext(request))
 list_languages=user_passes_test(lambda user: can_translate(user), '/admin/')(list_languages)
@@ -589,7 +595,7 @@ def update(request, catalogue=False, no_confirmation=False):
         return HttpResponseRedirect(redirect_to)
     return render_to_response('transhette/update_file.html',
                               {'form': form,
-                              'ADMIN_MEDIA_PREFIX': STATIC_ADMIN},
+                              'ADMIN_MEDIA_PREFIX': ADMIN_PREFIX},
                               context_instance=RequestContext(request))
 
 
@@ -626,7 +632,7 @@ def update_confirmation(request):
                              'posible_path': posible_path,
                              'lang': lang,
                              'lang_index': lang_index,
-                             'ADMIN_MEDIA_PREFIX': STATIC_ADMIN},
+                             'ADMIN_MEDIA_PREFIX': ADMIN_PREFIX},
                             context_instance=RequestContext(request))
 
 
@@ -690,7 +696,7 @@ def translation_conflicts(request):
             conflicts.append(conflict)
     return render_to_response('transhette/translation_conflicts.html',
                               {'conflicts': conflicts,
-                               'ADMIN_MEDIA_PREFIX': STATIC_ADMIN},
+                               'ADMIN_MEDIA_PREFIX': ADMIN_PREFIX},
                               context_instance=RequestContext(request))
 
 

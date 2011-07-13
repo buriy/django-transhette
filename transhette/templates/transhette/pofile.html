@@ -163,11 +163,11 @@
                                 {% endfor %}
                                 {% if not item_message.is_valid %}
                                   <p>
-                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" />
-                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "There is a more prioritary catalog" %}</a>
+                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-no.gif" alt="{% trans "No" %}" />
+                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "Catalog with higher priority used" %}</a>
                                   </p>
                                   <p>
-                                    <label>{% trans "Prioritary translation:" %}</label>
+                                    <label>{% trans "Higher priority translation:" %}</label>
                                     <ul>
                                     {% for k, msgstr in item_message.valid_entry.msgstr_plural.items|dictsort:"0"  %}
                                       <li>
@@ -177,14 +177,14 @@
                                     {% endfor %}
                                     </ul>
                                     <span class="hide ajax-notify ajax-success">
-                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
                                     </span>
                                     <span class="hide ajax-notify ajax-error">
-                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
                                     </span>
                                   </p>
                                   <p>
-                                    {% trans "Update prioritary catalog with the text from the input boxes?" %}
+                                    {% trans "Update higher priority catalog with the current translation?" %}
                                     <input type="hidden" class="valid-catalog" name="valid_catalog" value="{{ item_message.valid_catalog.fpath }}" />
                                     <input type="hidden" class="entry-id" name="entry_id" value="{{ message.msgid }}" />
                                     <input type="button" class="update-by-ajax" name="update_prioritary" value="{% trans "Yes, update" %}" />
@@ -200,22 +200,22 @@
                                 <textarea rows="{{message.msgid|format_message|lines_count}}" cols="40" name="m_{{message.id}}">{{message.msgstr}}</textarea>
                                 {% if ENABLE_TRANSLATION_SUGGESTIONS %}<a href="#" class="suggest">{% trans "suggest" %}</a>{% endif %}
                                 {% if not item_message.is_valid %}
+                                  <div style="float: right">
+                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-no.gif" alt="{% trans "No" %}" />
+                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "Higher priotity catalog used" %}</a>
+                                  </div>
                                   <p>
-                                    <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" />
-                                    <a href="{% url transhette-change-catalogue %}?entry_id={{ message.msgid }}&catalog={{ item_message.valid_catalog.fpath }}">{% trans "There is a more prioritary catalog" %}</a>
-                                  </p>
-                                  <p>
-                                    <label>{% trans "Prioritary translation:" %}</label>
+                                    <label>{% trans "Higher priority translation:" %}</label>
                                     <span class="prioritary-translation">{{ item_message.valid_entry.msgstr }}</span>
                                     <span class="hide ajax-notify ajax-success">
-                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-yes.gif" alt="{% trans "Yes" %}" /> {% trans "Updated!" %}
                                     </span>
                                     <span class="hide ajax-notify ajax-error">
-                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/admin/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
+                                       <img src="{{ ADMIN_MEDIA_PREFIX }}img/icon-no.gif" alt="{% trans "No" %}" /> {% trans "Error updating" %}
                                     </span>
                                   </p>
                                   <p>
-                                    {% trans "Update prioritary catalog with the text from the input box?" %}
+                                    {% trans "Update higher priority catalog with the translated text?" %}
                                     <input type="hidden" class="valid-catalog" name="valid_catalog" value="{{ item_message.valid_catalog.fpath }}" />
                                     <input type="hidden" class="entry-id" name="entry_id" value="{{ message.msgid }}" />
                                     <input type="button" class="update-by-ajax" name="update_prioritary" value="{% trans "Yes, update" %}" />

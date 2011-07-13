@@ -28,10 +28,10 @@
     {% if not changes_entries and not news_entries %}
         <h3>{% trans "No changes"%}</h3>
     {% else %}
-        <h3>{% trans "Your action wil have these consequences:"%}</h3>
+        <h3>{% trans "Your action will have these consequences:"%}</h3>
         <ul>
             {% if changes_entries %}
-            <li> {% trans "News messages created" %}
+            <li> {% trans "New messages created" %}
             <ul>
                 {% for entry in changes_entries %}
                     <li> {{ entry.entry.msgid }}: '{{ entry.entry.msgstr }}' </li>

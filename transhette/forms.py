@@ -1,5 +1,5 @@
 import tempfile
-from os import path
+from os import path, sep
 
 from django import forms
 from django.forms.util import ErrorList
@@ -89,12 +89,12 @@ class UpdatePoForm(FormAdminDjango):
             l_extend = [item.split(settings.BASEDIR)[1] for item in l_extend if item.startswith(settings.BASEDIR)]
             l.extend(l_extend)
         for item in l:
-            item_split = item.split('/')
+            item_split = item.split(sep)
             if item_split[1] == 'locale':
                 if not (PO_PROJECT_BASE, 'entire project') in choices:
                     choices.append((PO_PROJECT_BASE, 'entire project'))
             else:
-                item_split2 = item.split("/locale/")
+                item_split2 = item.split(sep+"locale"+sep)
                 item_tuple = (item_split2[0][1:], item_split2[0].split('/')[-1])
                 if not item_tuple in choices:
                     choices.append(item_tuple)

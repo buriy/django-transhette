@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Rosetta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-03-12 17:56+0100\n"
-"PO-Revision-Date: 2011-07-12 13:54\n"
+"POT-Creation-Date: 2011-07-13 19:55+0700\n"
+"PO-Revision-Date: 2011-07-13 19:55\n"
 "Last-Translator: <burchik@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,230 +16,399 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Translated-Using: django-transhette 0.1.SVN\n"
 
-#: views.py:152 views.py:364
+#: .\views.py:204 .\views.py:419
 msgid "Server restarted. Wait 10 seconds before checking translation"
 msgstr "Сервер перезапущен. Подождите 10 секунд перед проверкой переводов."
 
-#: templates/rosetta/base.html:32
+#: .\templates\transhette\base.html.py:23
+msgid "Transhette"
+msgstr "Переводы"
+
+#: .\templates\transhette\base.html.py:33
 msgid "Welcome,"
 msgstr "Добро пожаловать,"
 
-#: templates/rosetta/base.html:34
+#: .\templates\transhette\base.html.py:35
 msgid "Administration"
 msgstr "Администрирование"
 
-#: templates/rosetta/base.html:35
+#: .\templates\transhette\base.html.py:36
 msgid "Documentation"
 msgstr "Документация"
 
-#: templates/rosetta/base.html:36
+#: .\templates\transhette\base.html.py:37
 msgid "Change password"
 msgstr "Сменить пароль"
 
-#: templates/rosetta/base.html:37
+#: .\templates\transhette\base.html.py:38
 msgid "Log out"
 msgstr "Выход"
 
-#: templates/rosetta/confirm_restart.html:7 templates/rosetta/pofile.html:8
+#: .\templates\transhette\confirm_restart.html.py:14
+#: .\templates\transhette\pofile.html.py:84
+#: .\templates\transhette\update_confirmation.html.py:8
+#: .\templates\transhette\update_file.html.py:8
 msgid "Pick another file"
 msgstr "Выбрать другой файл"
 
-#: templates/rosetta/confirm_restart.html:8 templates/rosetta/pofile.html:9
+#: .\templates\transhette\confirm_restart.html.py:15
+#: .\templates\transhette\pofile.html.py:85
+#: .\templates\transhette\update_confirmation.html.py:9
+#: .\templates\transhette\update_file.html.py:9
 msgid "Download this catalog"
 msgstr "Скачать этот файл переводов"
 
-#: templates/rosetta/confirm_restart.html:13
-#: templates/rosetta/languages.html:3 templates/rosetta/pofile.html:14
+#: .\templates\transhette\confirm_restart.html.py:20
+#: .\templates\transhette\languages.html.py:3
+#: .\templates\transhette\pofile.html.py:92
+#: .\templates\transhette\translation_conflicts.html.py:4
+#: .\templates\transhette\update_confirmation.html.py:17
+#: .\templates\transhette\update_file.html.py:17
 msgid "Home"
 msgstr "Начало"
 
-#: templates/rosetta/confirm_restart.html:13
+#: .\templates\transhette\confirm_restart.html.py:20
 msgid "Restart server"
 msgstr "Перезагрузить сервер"
 
-#: templates/rosetta/confirm_restart.html:18
+#: .\templates\transhette\confirm_restart.html.py:25
 msgid "Are you sure you want to restart web server?"
 msgstr "Вы уверены, что хотите перезапустить веб-сервер?"
 
-#: templates/rosetta/confirm_restart.html:22
+#: .\templates\transhette\confirm_restart.html.py:32
 msgid "Yes, I am sure"
 msgstr "Да, я уверен"
 
-#: templates/rosetta/inline_demo.html:31 templates/rosetta/inline_demo.html:47
+#: .\templates\transhette\confirm_restart.html.py:35
+msgid "Please wait while the server is restarting"
+msgstr "Подождите, пока сервер перезагружается"
+
+#: .\templates\transhette\confirm_restart.html.py:38
+msgid "Server restarted successfully!"
+msgstr "Сервер перезагружен успешно!"
+
+#: .\templates\transhette\confirm_restart.html.py:39
+msgid "Return to transhette home page"
+msgstr "Вернуться на главную страницу переводов"
+
+#: .\templates\transhette\confirm_restart.html.py:42
+msgid "The server is taking to long to respond. Probably it is down, please check!"
+msgstr "Сервер долго не отвечает. Возможно, он перестал работать, пожалуйста, проверьте!"
+
+#: .\templates\transhette\form_admin_django.html.py:3
+msgid "Please correct the errors below."
+msgstr "Исправьте ошибки ниже."
+
+#: .\templates\transhette\inline_demo.html.py:31
+#: .\templates\transhette\inline_demo.html.py:47
 msgid "Province"
 msgstr "Регион"
 
-#: templates/rosetta/inline_demo.html:36 templates/rosetta/inline_demo.html:41
+#: .\templates\transhette\inline_demo.html.py:36
+#: .\templates\transhette\inline_demo.html.py:41
 msgid "Add"
 msgstr "Добавить"
 
-#: templates/rosetta/languages.html:3 templates/rosetta/languages.html.py:4
+#: .\templates\transhette\languages.html.py:3
+#: .\templates\transhette\languages.html.py:4
 msgid "Language selection"
 msgstr "Выбор языка"
 
-#: templates/rosetta/languages.html:14
+#: .\templates\transhette\languages.html.py:9
+#: .\templates\transhette\pofile.html.py:83
+#: .\templates\transhette\update_confirmation.html.py:7
+#: .\templates\transhette\update_file.html.py:7
+msgid "Restart web server"
+msgstr "Перезапустить веб-сервер"
+
+#: .\templates\transhette\languages.html.py:10
+#: .\templates\transhette\update_confirmation.html.py:10
+#: .\templates\transhette\update_file.html.py:10
+msgid "Update a file"
+msgstr "Обновить файл"
+
+#: .\templates\transhette\languages.html.py:24
+#: .\templates\transhette\translation_conflicts.html.py:28
 msgid "File"
 msgstr "Файл"
 
-#: templates/rosetta/languages.html:15
+#: .\templates\transhette\languages.html.py:25
 msgid "Messages"
 msgstr "Сообщений"
 
-#: templates/rosetta/languages.html:16
+#: .\templates\transhette\languages.html.py:26
 msgid "Translated"
 msgstr "С переводом"
 
-#: templates/rosetta/languages.html:17
+#: .\templates\transhette\languages.html.py:27
 msgid "Obsolete"
 msgstr "Устаревших"
 
-#: templates/rosetta/languages.html:18
+#: .\templates\transhette\languages.html.py:28
 msgid "Progress"
 msgstr "Обработано"
 
-#: templates/rosetta/languages.html:37
+#: .\templates\transhette\languages.html.py:47
 msgid "Nothing to translate!"
 msgstr "Нечего переводить!"
 
-#: templates/rosetta/languages.html:38
+#: .\templates\transhette\languages.html.py:48
 msgid "You haven't specified any languages in your settings file, or haven't yet generated a batch of translation catalogs."
 msgstr "Вы не указали ни одного языка в файле настроек, или еще не сделали каталоги с переводами."
 
-#: templates/rosetta/languages.html:39
+#: .\templates\transhette\languages.html.py:49
 #, python-format
 msgid "Please refer to <a href=\"%(i18n_doc_link)s\">Django's I18N documentation</a> for a guide on how to set up internationalization for your project."
 msgstr "Пожалуйста, обратитесь к <a href=\"%(i18n_doc_link)s\">документации I18N Django,</a> для руководства о том, как настроить интернационализацию для вашего проекта."
 
-#: templates/rosetta/pofile.html:7
-msgid "Restart web server"
-msgstr "Перезапустить веб-сервер"
+#: .\templates\transhette\pofile.html.py:21
+msgid "Warning... There are fuzzy elements that will be translated as suggestion says. Do you want to continue?"
+msgstr "Предупреждение ... Есть неточные переводы, которые будут сохранены в текущем виде. Сохранить?"
 
-#: templates/rosetta/pofile.html:17
-msgid "Progress: %(percent_translated)s%"
-msgstr "Обработано: %(percent_translated)s%"
+#: .\templates\transhette\pofile.html.py:86
+msgid "Update this catalogue"
+msgstr "Загрузить исправленный файл переводов"
 
-#: templates/rosetta/pofile.html:18
+#: .\templates\transhette\pofile.html.py:95
+#, python-format
+msgid "Progress: %(percent_translated)s%%"
+msgstr "Обработано: %(percent_translated)s%%"
+
+#: .\templates\transhette\pofile.html.py:96
 msgid "File is read-only: download the file when done editing!"
 msgstr "Файл только для чтения: загрузите файл после завершения редактирования!"
 
-#: templates/rosetta/pofile.html:20
+#: .\templates\transhette\pofile.html.py:98
 msgid "English"
 msgstr "Английский"
 
-#: templates/rosetta/pofile.html:22
+#: .\templates\transhette\pofile.html.py:101
 #, python-format
-msgid "Translate into %(rosetta_i18n_lang_name)s"
-msgstr "Перевод на %(rosetta_i18n_lang_name)s"
+msgid "Translate into %(transhette_i18n_lang_name)s"
+msgstr "Перевод на %(transhette_i18n_lang_name)s"
 
-#: templates/rosetta/pofile.html:25
+#: .\templates\transhette\pofile.html.py:104
 msgid "Display:"
 msgstr "Отображать:"
 
-#: templates/rosetta/pofile.html:26
+#: .\templates\transhette\pofile.html.py:105
 msgid "Untranslated only"
 msgstr "Только без перевода"
 
-#: templates/rosetta/pofile.html:27
+#: .\templates\transhette\pofile.html.py:106
 msgid "Translated only"
 msgstr "Только с переводом"
 
-#: templates/rosetta/pofile.html:28
+#: .\templates\transhette\pofile.html.py:107
 msgid "Fuzzy"
 msgstr "Неточные переводы"
 
-#: templates/rosetta/pofile.html:29
+#: .\templates\transhette\pofile.html.py:108
 msgid "Both"
 msgstr "Все"
 
-#: templates/rosetta/pofile.html:35
-msgid "rosetta_search"
-msgstr "rosetta_search"
+#: .\templates\transhette\pofile.html.py:115
+msgid "transhette_search"
+msgstr "transhette_search"
 
-#: templates/rosetta/pofile.html:37
+#: .\templates\transhette\pofile.html.py:117
 msgid "Go"
 msgstr "Вперёд"
 
-#: templates/rosetta/pofile.html:53
+#: .\templates\transhette\pofile.html.py:134
 msgid "ID"
 msgstr "ID"
 
-#: templates/rosetta/pofile.html:59
+#: .\templates\transhette\pofile.html.py:140
 msgid "Occurrences(s)"
 msgstr "Встречается в"
 
-#: templates/rosetta/pofile.html:91
+#: .\templates\transhette\pofile.html.py:166
+#: .\templates\transhette\pofile.html.py:183
+#: .\templates\transhette\pofile.html.py:204
+#: .\templates\transhette\pofile.html.py:214
+msgid "No"
+msgstr "Нет"
+
+#: .\templates\transhette\pofile.html.py:167
+msgid "Catalog with higher priority used"
+msgstr "Используется каталог с более высоким приоритетом"
+
+#: .\templates\transhette\pofile.html.py:170
+#: .\templates\transhette\pofile.html.py:208
+msgid "Higher priority translation:"
+msgstr "Перевод с большим приоритетом:"
+
+#: .\templates\transhette\pofile.html.py:180
+#: .\templates\transhette\pofile.html.py:211
+msgid "Yes"
+msgstr "Да"
+
+#: .\templates\transhette\pofile.html.py:180
+#: .\templates\transhette\pofile.html.py:211
+msgid "Updated!"
+msgstr "Обновлено!"
+
+#: .\templates\transhette\pofile.html.py:183
+#: .\templates\transhette\pofile.html.py:214
+msgid "Error updating"
+msgstr "Ошибка обновления"
+
+#: .\templates\transhette\pofile.html.py:187
+msgid "Update higher priority catalog with the current translation?"
+msgstr "Обновить перевод в более приоритетном каталоге?"
+
+#: .\templates\transhette\pofile.html.py:190
+#: .\templates\transhette\pofile.html.py:221
+msgid "Yes, update"
+msgstr "Да, обновить"
+
+#: .\templates\transhette\pofile.html.py:201
 msgid "suggest"
 msgstr "подсказать перевод"
 
-#: templates/rosetta/pofile.html:99
+#: .\templates\transhette\pofile.html.py:205
+msgid "Higher priotity catalog used"
+msgstr "Найден перевод с большим приоритетом"
+
+#: .\templates\transhette\pofile.html.py:218
+msgid "Update higher priority catalog with the translated text?"
+msgstr "Обновить перевод в файле с большим приоритетом?"
+
+#: .\templates\transhette\pofile.html.py:231
 #, python-format
 msgid "%(more_count)s more"
 msgid_plural "%(more_count)s more"
 msgstr[0] "ещё %(more_count)s"
 msgstr[1] "ещё %(more_count)s"
 
-#: templates/rosetta/pofile.html:112
+#: .\templates\transhette\pofile.html.py:244
 msgid "Save and translate next block"
 msgstr "Сохранить и перевести следующий блок"
 
-#: templates/rosetta/pofile.html:115
+#: .\templates\transhette\pofile.html.py:247
 msgid "Continue"
 msgstr "Продолжить"
 
-#: templates/rosetta/pofile.html:119
+#: .\templates\transhette\pofile.html.py:251
 msgid "Skip to page:"
 msgstr "Перейти к странице:"
 
-#: templates/rosetta/pofile.html:132
+#: .\templates\transhette\pofile.html.py:264
 msgid "Displaying:"
 msgstr "Отображение:"
 
-#: templates/rosetta/pofile.html:134
+#: .\templates\transhette\pofile.html.py:266
 #, python-format
 msgid "%(hits)s/%(message_number)s message"
 msgid_plural "%(hits)s/%(message_number)s messages"
 msgstr[0] "%(hits)s/%(message_number)s сообщение"
 msgstr[1] "%(hits)s/%(message_number)s сообщений"
 
-#: templates/rosetta/rosetta_header.html:10
+#: .\templates\transhette\transhette_header.html.py:10
 msgid "See Tranlated items"
 msgstr "Посмотреть переведённые записи"
 
-#: templates/rosetta/rosetta_header.html:11
+#: .\templates\transhette\transhette_header.html.py:11
 msgid "See not translated items"
 msgstr "Посмотреть не переведённые записи"
 
-#: templates/rosetta/rosetta_header.html:12
+#: .\templates\transhette\transhette_header.html.py:12
 msgid "Apply changes"
 msgstr "Применить изменения"
 
-#: templates/rosetta/rosetta_header.html:21
+#: .\templates\transhette\transhette_header.html.py:21
 msgid "Give a new translation for "
 msgstr "Дайте новый перевод для"
 
-#: templates/rosetta/rosetta_header.html:26
+#: .\templates\transhette\transhette_header.html.py:26
 msgid "You're sending a empty translation ¿Are you sure? "
 msgstr "Вы отправляете пустой перевод. Вы уверены?"
 
-#: templates/rosetta/rosetta_header.html:45
+#: .\templates\transhette\transhette_header.html.py:45
 msgid "Can't send translation"
 msgstr "Не удается отправить перевод"
 
-#: templates/rosetta/rosetta_header.html:112
+#: .\templates\transhette\transhette_header.html.py:112
 msgid "Applying Changes"
 msgstr "Применяю изменения"
 
-#: templates/rosetta/rosetta_header.html:121
+#: .\templates\transhette\transhette_header.html.py:121
 msgid "Reloading"
 msgstr "Перегрузка"
 
-#: templates/rosetta/rosetta_header.html:124
+#: .\templates\transhette\transhette_header.html.py:124
 msgid "Apply Changes"
 msgstr "Применить изменения"
 
-#: templates/rosetta/rosetta_header.html:129
+#: .\templates\transhette\transhette_header.html.py:129
 msgid "Can't restart server"
 msgstr "Не удается перезагрузить сервер"
+
+#: .\templates\transhette\translation_conflicts.html.py:4
+#: .\templates\transhette\translation_conflicts.html.py:9
+msgid "Translation conflicts"
+msgstr "Переводы конфликтуют"
+
+#: .\templates\transhette\translation_conflicts.html.py:19
+msgid "Translations"
+msgstr "Переводы"
+
+#: .\templates\transhette\translation_conflicts.html.py:22
+msgid "Translated into"
+msgstr "Переведен на"
+
+#: .\templates\transhette\translation_conflicts.html.py:22
+msgid "as"
+msgstr "как"
+
+#: .\templates\transhette\translation_conflicts.html.py:25
+msgid "Occurrences"
+msgstr "Встречается в"
+
+#: .\templates\transhette\translation_conflicts.html.py:28
+msgid "at line"
+msgstr "в строке"
+
+#: .\templates\transhette\update_confirmation.html.py:18
+#: .\templates\transhette\update_file.html.py:18
+msgid " Update file "
+msgstr "Загрузить файл"
+
+#: .\templates\transhette\update_confirmation.html.py:22
+msgid "Are you sure you want to update this file?"
+msgstr "Вы уверены, что хотите обновить этот файл?"
+
+#: .\templates\transhette\update_confirmation.html.py:24
+msgid "Check that this path is similar to this one: "
+msgstr "Убедитесь, что этот путь похож на этот:"
+
+#: .\templates\transhette\update_confirmation.html.py:29
+msgid "No changes"
+msgstr "Нет изменений"
+
+#: .\templates\transhette\update_confirmation.html.py:31
+msgid "Your action will have these consequences:"
+msgstr "Ваши действия будут следующие последствия:"
+
+#: .\templates\transhette\update_confirmation.html.py:34
+msgid "New messages created"
+msgstr "Новые сообщения"
+
+#: .\templates\transhette\update_confirmation.html.py:43
+msgid "Old messages updated"
+msgstr "Измененные сообщения"
+
+#: .\templates\transhette\update_confirmation.html.py:59
+msgid "Confirmation"
+msgstr "Подтверждение"
+
+#: .\templates\transhette\update_file.html.py:26
+msgid "Update File"
+msgstr "Обновить файл"
+
+#~ msgid "There is a more prioritary catalog"
+#~ msgstr "Существует более приоритетный каталог"
 
 #~ msgid "Search"
 #~ msgstr "Поиск"
