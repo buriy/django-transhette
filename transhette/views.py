@@ -16,7 +16,7 @@ from django.http import Http404, HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.shortcuts import render_to_response
 from django.utils import simplejson
-from django.utils.encoding import smart_unicode, smart_str
+from django.utils.encoding import smart_unicode
 from django.utils.translation import ugettext_lazy as _
 from django.utils.translation import ugettext, get_language
 from django.views.decorators.cache import cache_page, never_cache
@@ -60,9 +60,9 @@ def validate_format(pofile):
     os.close(handle)
     pofile.save(temp_file)
 
-    cmd = ['msgfmt', '--check-format', temp_file]
-    process = subprocess.Popen(cmd, stderr=subprocess.PIPE)
-    out, err = process.communicate()
+    cmd = ['msgfmt', '--check-format', temp_file, '--output-file', '-']
+    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    _out, err = process.communicate()
     if process.returncode != 0:
         input_lines = open(temp_file, 'r').readlines()
         error_lines = err.strip().split('\n')
@@ -142,7 +142,6 @@ def set_new_translation(request):
                 poentry.msgstr = msgstr
                 po_filename = file_po
                 break
-        version = transhette.get_version(True)
         format_errors = validate_format(selected_pofile)
         if not format_errors:
             try:
@@ -247,9 +246,10 @@ def home(request):
         for language in settings.LANGUAGES:
             pos = find_pos(language[0])
             position = None
+            lang_frag = '/%s/'
             for i in xrange(len(pos)):
-                if transhette_i18n_pofile.fpath.replace('/%s/' % transhette_i18n_lang_code,
-                                                     '/%s/' % language[0]) == pofile(pos[i]).fpath:
+                if transhette_i18n_pofile.fpath.replace( lang_frag % transhette_i18n_lang_code,
+                                                        lang_frag % language[0]) == pofile(pos[i]).fpath:
                     position = i
             if position is not None:
                 languages.append((language[0], _(language[1]), position))
@@ -293,7 +293,6 @@ def home(request):
                 if file_change and 'fuzzy' in transhette_i18n_pofile[id].flags:
                     transhette_i18n_pofile[id].flags.remove('fuzzy')
 
-
             format_errors = validate_format(transhette_i18n_pofile)
 
             if file_change and transhette_i18n_write and not format_errors:
@@ -306,8 +305,9 @@ def home(request):
                 except UnicodeDecodeError:
                     pass
                 try:
+                    mo_path = transhette_i18n_fn.replace('.po', '.mo')
                     transhette_i18n_pofile.save()
-                    transhette_i18n_pofile.save_as_mofile(transhette_i18n_fn.replace('.po', '.mo'))
+                    transhette_i18n_pofile.save_as_mofile(mo_path)
 
                     # Try auto-reloading via the WSGI daemon mode reload mechanism
                     if get_setting('WSGI_AUTO_RELOAD') and\
@@ -436,23 +436,23 @@ def download_file(request):
     if not transhette_i18n_lang_code or not transhette_i18n_pofile or not transhette_i18n_fn:
         return HttpResponseRedirect(reverse('transhette-home'))
     try:
-        if len(transhette_i18n_fn.split('/')) >= 5:
-            offered_fn = '_'.join(transhette_i18n_fn.split('/')[-5:])
+        if len(transhette_i18n_fn.split(os.sep)) >= 5:
+            offered_fn = '_'.join(transhette_i18n_fn.split(os.sep)[-5:])
         else:
-            offered_fn = transhette_i18n_fn.split('/')[-1]
+            offered_fn = transhette_i18n_fn.split(os.sep)[-1]
         # filenames
         tmpdir=tempfile.gettempdir()
         zip_fn = str(os.path.join(tmpdir, '%s.%s.zip' % (offered_fn, transhette_i18n_lang_code)))
-        po_fn = str(os.path.join(tmpdir, transhette_i18n_fn.split('/')[-1]))
+        po_fn = str(os.path.join(tmpdir, transhette_i18n_fn.split(os.sep)[-1]))
         mo_fn = str(po_fn.replace('.po', '.mo')) # not so smart, huh
         transhette_i18n_pofile.save(po_fn)
         transhette_i18n_pofile.save_as_mofile(mo_fn)
         zf = zipfile.ZipFile(zip_fn, 'w')
-        zf.write(po_fn, str(po_fn.split('/')[-1]))
-        zf.write(mo_fn, str(mo_fn.split('/')[-1]))
+        zf.write(po_fn, str(po_fn.split(os.sep)[-1]))
+        zf.write(mo_fn, str(mo_fn.split(os.sep)[-1]))
         zf.close()
 
-        response = HttpResponse(file(zip_fn).read())
+        response = HttpResponse(open(zip_fn, 'rb').read())
         response['Content-Disposition'] = 'attachment; filename=%s.%s.zip' %(offered_fn, transhette_i18n_lang_code)
         response['Content-Type'] = 'application/x-zip'
 
@@ -461,7 +461,8 @@ def download_file(request):
         os.unlink(mo_fn)
 
         return response
-    except Exception, e:
+    except Exception:
+        import traceback;traceback.print_exc()
         return HttpResponseRedirect(reverse('transhette-home'))
         #return HttpResponse(e, mimetype="text/plain")
 download_file=user_passes_test(lambda user: can_translate(user), '/admin/')(download_file)
@@ -647,7 +648,7 @@ def translation_conflicts(request):
     locale_path = os.path.join(settings.BASEDIR, 'locale')
     po_dict = {}
     # fill pofile_dict
-    for lang, lang_name in settings.LANGUAGES:
+    for lang, _lang_name in settings.LANGUAGES:
         po = pofile(os.path.join(locale_path, lang, 'LC_MESSAGES', 'django.po'))
         po_dict[lang] = po
         # reference po file catalog. used to find conflicts
