@@ -198,7 +198,7 @@ def do_restart(request, noresponse=False, with_ajax=False):
             if not pid_file:
                 raise AttributeError("You need a FCGI_PID_FILE setting if you "
                     "define AUTO_RELOAD_METHOD='fcgi' !")
-            os.system('%ssudo kill -HUP `cat %s` &' % (sleep, pid_file))
+            os.system('%s/bin/bash -l -c "kill -HUP `cat %s`" &' % (sleep, pid_file))
 
         elif reload_method.startswith('restart_script'):
             script = reload_method.split(" ", 1)[1]
