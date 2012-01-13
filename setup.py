@@ -14,7 +14,12 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup, find_packages
 
 
 def read(*rnames):
@@ -25,8 +30,7 @@ setup(
     name="transhette",
     version="0.5.10",
     author="Yaco Sistemas S.L.",
-    author_email="esanchez@yaco.es",
-    description="django-rosetta fork for translating Django .po catalogs, with a lot of improvements compared with rosetta",
+    author_email="esanchez@yaco.es", description="django-rosetta fork for translating Django .po catalogs, with a lot of improvements compared with rosetta",
     long_description=(read('README.txt') + '\n\n' + read('CHANGES.txt')),
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -38,4 +42,5 @@ setup(
     url='https://tracpub.yaco.es/djangoapps/wiki/Transhette',
     packages=find_packages('.'),
     include_package_data=True,
+    zip_safe=False,
 )
