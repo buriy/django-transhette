@@ -14,28 +14,36 @@
 # along with this software.  If not, see <http://www.gnu.org/licenses/>.
 
 import os
-from setuptools import setup, find_packages
+try:
+    from setuptools import setup, find_packages
+except ImportError:
+    from ez_setup import use_setuptools
+    use_setuptools()
+    from setuptools import setup, find_packages
 
 
 def read(*rnames):
     return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
-
 setup(
     name="transhette",
     version="0.5.10",
     author="Yaco Sistemas S.L.",
-    author_email="esanchez@yaco.es",
-    description="django-rosetta fork for translating Django .po catalogs, with a lot of improvements compared with rosetta",
-    long_description=(read('README.txt') + '\n\n' + read('CHANGES.txt')),
+    author_email="esanchez@yaco.es", 
+    description="django-rosetta fork for translating Django .po catalogs, "
+        "with a lot of improvements compared with rosetta",
+    long_description="%s%s" % (read('README.rst'), read('CHANGES.rst')),
     classifiers=[
         'Development Status :: 4 - Beta',
+        'Environment :: Web Environment',
+        'Programming Language :: Python',
         'Framework :: Django',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
     ],
     license="LGPL 3",
     keywords="django translation i18n rosetta",
     url='https://tracpub.yaco.es/djangoapps/wiki/Transhette',
-    packages=find_packages('.'),
+    packages=find_packages(),
     include_package_data=True,
+    zip_safe=False,
 )

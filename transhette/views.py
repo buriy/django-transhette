@@ -172,7 +172,7 @@ def do_restart(request, noresponse=False, with_ajax=False):
     * "test" for a django instance (this do a touch over settings.py for reload)
     * "apache"
     * "httpd"
-    * "wsgi"
+    * "fcgi"
     * "restart_script <script_path_name>"
     """
     if not with_ajax:
@@ -192,6 +192,13 @@ def do_restart(request, noresponse=False, with_ajax=False):
         ## RedHAT, CentOS
         elif reload_method == 'httpd':
             os.system('%ssudo service httpd restart &' % sleep)
+        # Cherokee, fcgi servers
+        elif reload_method == 'fcgi':
+            pid_file = get_setting('FCGI_PID_FILE', default=None)
+            if not pid_file:
+                raise AttributeError("You need a FCGI_PID_FILE setting if you "
+                    "define AUTO_RELOAD_METHOD='fcgi' !")
+            os.system('%s/bin/bash -l -c "kill -HUP `cat %s`" &' % (sleep, pid_file))
 
         elif reload_method.startswith('restart_script'):
             script = reload_method.split(" ", 1)[1]
