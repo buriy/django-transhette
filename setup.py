@@ -22,18 +22,17 @@ except ImportError:
     from setuptools import setup, find_packages
 
 
-with open(os.path.join(os.path.dirname(__file__), 'README.rst')) as file:
-    long_description = file.read()
-with open(os.path.join(os.path.dirname(__file__), 'CHANGES.rst')) as file:
-    long_description += file.read()
-
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
 
 setup(
     name="transhette",
     version="0.5.10",
     author="Yaco Sistemas S.L.",
-    author_email="esanchez@yaco.es", description="django-rosetta fork for translating Django .po catalogs, with a lot of improvements compared with rosetta",
-    long_description=long_description,
+    author_email="esanchez@yaco.es", 
+    description="django-rosetta fork for translating Django .po catalogs, "
+        "with a lot of improvements compared with rosetta",
+    long_description="%s%s" % (read('README.rst'), read('CHANGES.rst')),
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
