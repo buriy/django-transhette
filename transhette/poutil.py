@@ -57,7 +57,9 @@ def get_orderer_path_list(include_djangos, include_transhette):
 
         # project/app/locale
         for appname in settings.INSTALLED_APPS:
-            if 'transhette' == appname and include_transhette == False:
+            if 'transhette' == appname and not include_transhette:
+                continue
+            if appname.startswith('django.') and not include_djangos:
                 continue
             appname = str(appname)  # to avoid a fail in __import__ sentence
             p = appname.rfind('.')
